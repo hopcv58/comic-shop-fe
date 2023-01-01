@@ -60,25 +60,25 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/customer/list',
     name: 'Customer',
-    meta: { title: 'Customer', icon: 'el-icon-user-solid' },
+    meta: { title: 'Quản lý khách hàng', icon: 'el-icon-user-solid' },
     children: [
       {
         path: 'list',
         name: 'CustomerList',
         component: () => import('@/views/customer/index'),
-        meta: { title: 'Customer List' }
+        meta: { title: 'Danh sách khách hàng' }
       },
       {
         path: 'create',
         name: 'CustomerCreate',
         component: () => import('@/views/customer/create'),
-        meta: { title: 'Create Customer' }
+        meta: { title: 'Tạo khách hàng' }
       },
       {
         path: 'edit/:id(\\d+)',
         name: 'CustomerEdit',
         component: () => import('@/views/customer/edit'),
-        meta: { title: 'Customer Edit', noCache: true, activeMenu: '/customer/list' },
+        meta: { title: 'Sửa thông tin khách hàng', noCache: true, activeMenu: '/customer/list' },
         hidden: true
       }
     ]
@@ -89,32 +89,32 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/comic/list',
     name: 'Comic',
-    meta: { title: 'Comic', icon: 'el-icon-notebook-2' },
+    meta: { title: 'Quản lý đầu truyện', icon: 'el-icon-notebook-2' },
     children: [
       {
         path: 'list',
         name: 'ComicList',
         component: () => import('@/views/comic/index'),
-        meta: { title: 'Comic List' }
+        meta: { title: 'Danh sách đầu truyện' }
       },
       {
         path: 'create',
         name: 'ComicCreate',
         component: () => import('@/views/comic/create'),
-        meta: { title: 'Create Comic' }
+        meta: { title: 'Thêm đầu truyện mới' }
       },
       {
         path: 'edit/:id(\\d+)',
         name: 'ComicEdit',
         component: () => import('@/views/comic/edit'),
-        meta: { title: 'Comic Edit', noCache: true, activeMenu: '/comic/list' },
+        meta: { title: 'Sửa thông tin đầu truyện', noCache: true, activeMenu: '/comic/list' },
         hidden: true
       },
       {
         path: ':id(\\d+)',
         name: 'ComicDetail',
         component: () => import('@/views/comic/detail'),
-        meta: { title: 'Comic Detail', noCache: true, activeMenu: '/comic/list' },
+        meta: { title: 'Thông tin chi tiết đầu truyện', noCache: true, activeMenu: '/comic/list' },
         hidden: true
       }
     ]

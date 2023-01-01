@@ -30,12 +30,12 @@
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Mã truyện" min-width="150">
+      <el-table-column label="Mã đầu truyện" min-width="150">
         <template slot-scope="scope">
           {{ scope.row.comicCode }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên truyện" min-width="250">
+      <el-table-column label="Tên đầu truyện" min-width="250">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
