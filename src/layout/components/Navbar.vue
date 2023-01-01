@@ -5,6 +5,12 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
+      <router-link to="/cart">
+        <div class="cart">
+          <i class="el-icon-shopping-cart-2" />
+          <span class="cart-count">{{ cartCount }}</span>
+        </div>
+      </router-link>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -35,11 +41,30 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      cartCount: 0
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
     ])
+  },
+  watch: {
+    '$store.state.cart.items': {
+      handler: function(val) {
+        this.cartCount = val.reduce((acc, item) => acc + item.comicDetailIds.length, 0)
+      },
+      deep: true
+    }
+  },
+  created() {
+    const cartItems = this.$store.state.cart.items
+    if (cartItems) {
+      this.cartCount = cartItems.reduce((acc, item) => acc + item.comicDetailIds.length, 0)
+    }
   },
   methods: {
     toggleSideBar() {

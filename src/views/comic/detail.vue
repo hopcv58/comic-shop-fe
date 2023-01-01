@@ -3,7 +3,7 @@
     <div style="display: flex; justify-content: end; margin-bottom: 20px">
       <el-button type="primary" size="mini" @click="redirectToCreate">Thêm quyển mới</el-button>
     </div>
-    <el-form :inline="true" :model="comic">
+    <el-form :inline="true" :model="comic" class="form-search">
       <el-form-item label="Tên đầu truyện">
         <el-input v-model="comic.name" disabled />
       </el-form-item>
@@ -30,7 +30,7 @@
       element-loading-text="Loading"
       table-layout="auto"
       border
-      highlight-current-row
+      :row-class-name="tableRowClassName"
     >
       <el-table-column align="center" label="ID" width="85">
         <template slot-scope="scope">
@@ -44,47 +44,75 @@
       </el-table-column>
       <el-table-column label="Tình trạng sách" min-width="120">
         <template slot-scope="scope">
-          <el-input ref="input" v-if="scope.row.id === editing.id" v-model="scope.row.status" @blur="handleDeselect" />
+          <el-input v-if="scope.row.id === editing.id" ref="input" v-model="scope.row.status" />
           <div v-else>{{ scope.row.status }}</div>
         </template>
       </el-table-column>
       <el-table-column label="Tình trạng thuê" min-width="150">
         <template slot-scope="scope">
-          {{ scope.row.available === true ? 'Có thể thuê' : 'Đã thuê' }}
+          <el-select v-if="scope.row.id === editing.id" ref="select" v-model="scope.row.available" placeholder="Select">
+            <el-option
+              :value="true"
+              label="Có thể thuê"
+            />
+            <el-option
+              :value="false"
+              label="Không thể thuê"
+            />
+          </el-select>
+          <div v-else>{{ scope.row.available === true ? 'Có thể thuê' : 'Không thể thuê' }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="" width="250" align="center" fixed="right">
+      <el-table-column label="" width="150" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button
             type="success"
             size="mini"
+            :disabled="scope.row.available === false || rentingComicDetails.includes(scope.row.id)"
             @click="handleRent(scope.row)"
-          >Thuê</el-button>
+          >Thuê
+          </el-button>
           <el-button
             v-if="scope.row.id === editing.id"
-            type="primary"
+            type="warning"
             size="mini"
             @click="handleDeselect"
-          >Lưu</el-button>
+          >Lưu
+          </el-button>
           <el-button
             v-else
             type="primary"
             size="mini"
             @click="handleEdit(scope.row)"
-          >Sửa</el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            @click="handleDelete(scope.row)"
-          >Xoá</el-button>
+          >Sửa
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      title="Thêm truyện mới"
+      :visible.sync="createDialogueVisible"
+      width="30%"
+    >
+      <el-form
+        ref="form"
+        :model="createForm"
+        label-width="120px"
+      >
+        <el-form-item label="Tình trạng sách" prop="status">
+          <el-input v-model="createForm.status" width="100%" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createDialogueVisible = false">Quay lại</el-button>
+        <el-button type="primary" @click="addComicDetail">Thêm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { handleDelete, getList } from '@/api/comic-detail'
+import { handleUpdate, getList, handleCreate } from '@/api/comic-detail'
 import { getById } from '@/api/comic'
 
 export default {
@@ -92,9 +120,16 @@ export default {
     return {
       comicDetails: null,
       listLoading: true,
+      createDialogueVisible: false,
+      rentingComicDetails: [],
+      createForm: {
+        status: 'Sách mới',
+        comicId: this.$route.params.id
+      },
       editing: {
         id: null,
-        status: null
+        status: null,
+        available: null
       },
       params: {
         comicId: this.$route.params.id,
@@ -110,6 +145,10 @@ export default {
   },
   created() {
     this.fetchData()
+    const rentingComicDetails = this.$store.state.cart.items?.find(item => item.comicId === this.params.comicId)?.comicDetailIds
+    if (rentingComicDetails) {
+      this.rentingComicDetails = [...rentingComicDetails]
+    }
   },
   methods: {
     fetchData() {
@@ -133,17 +172,25 @@ export default {
     },
     handleDeselect() {
       this.$refs.table.setCurrentRow(null)
+      handleUpdate(this.editing.id, this.editing).then(() => {
+        this.fetchData()
+      })
       this.editing = {
         id: null,
         status: null
       }
     },
     redirectToCreate() {
-      this.$router.push({ path: '/comic/create' })
+      this.createDialogueVisible = true
     },
     handleRent(row) {
+      this.$store.dispatch('cart/addItem', {
+        comicId: this.params.comicId,
+        comicDetailId: row.id
+      })
+      this.rentingComicDetails.push(row.id)
       this.$message({
-        message: 'Đã thuê thành công',
+        message: 'Thêm vào giỏ hàng thành công',
         type: 'success'
       })
     },
@@ -154,26 +201,15 @@ export default {
       this.params.pageNo = page - 1
       this.fetchData()
     },
-    handleDelete(row) {
-      this.$confirm('This will permanently delete the comic. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        handleDelete(row.id).then(() => {
-          this.$message({
-            type: 'success',
-            message: 'Delete successfully!'
-          })
-          this.fetchData()
-        })
+    tableRowClassName({ row }) {
+      return row.available ? 'available-row' : 'unavailable-row'
+    },
+    addComicDetail() {
+      handleCreate(this.createForm).then(() => {
+        this.fetchData()
+        this.createDialogueVisible = false
       })
     }
   }
 }
 </script>
-<style scoped>
-.el-form-item {
-  width: calc(50% - 10px);
-}
-</style>

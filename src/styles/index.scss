@@ -95,3 +95,36 @@ div:focus {
   background-color: #f5f7fa;
   color: #606266;
 }
+.cart {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  .el-icon-shopping-cart-2 {
+    font-size: 35px;
+  }
+  .cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: #f56c6c;
+    color: #fff;
+    font-size: 12px;
+  }
+}
+
+.form-search .el-form-item {
+  width: calc(50% - 10px);
+}
+
+.el-table .unavailable-row {
+  background: #f2dede;
+}
+
+.el-table .available-row {
+  background: #f0f9eb;
+}

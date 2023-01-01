@@ -115,3 +115,7 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function numberFormat(value) {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}

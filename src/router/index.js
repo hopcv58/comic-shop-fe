@@ -121,23 +121,24 @@ export const constantRoutes = [
   },
 
   {
-    path: '/example',
+    path: '/cart',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    redirect: '/cart/list',
+    name: 'Cart',
+    meta: { title: 'Thanh toán', icon: 'el-icon-shopping-cart-2' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'list',
+        name: 'CartList',
+        component: () => import('@/views/cart/index'),
+        meta: { title: 'Chọn KH' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'checkout',
+        name: 'CartCheckout',
+        component: () => import('@/views/cart/checkout'),
+        meta: { title: 'Hoá đơn', activeMenu: '/cart/list' },
+        hidden: true
       }
     ]
   },

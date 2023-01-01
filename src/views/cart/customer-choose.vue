@@ -1,8 +1,5 @@
 <template>
   <div class="app-container">
-    <div style="display: flex; justify-content: end; margin-bottom: 20px">
-      <el-button type="primary" size="mini" @click="addCustomer">Thêm KH</el-button>
-    </div>
     <el-form :inline="true" :model="params" class="form-search">
       <el-form-item label="Tên KH">
         <el-input v-model="params.name" placeholder="Tên KH" @input="fetchData" />
@@ -39,18 +36,9 @@
           {{ scope.row.phoneNumber }}
         </template>
       </el-table-column>
-      <el-table-column label="" width="180" align="center">
+      <el-table-column label="" width="120" align="center">
         <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleEdit(scope.row)"
-          >Sửa</el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            @click="handleDelete(scope.row)"
-          >Xoá</el-button>
+          <el-button type="success" @click="handleSelect(scope.row)" size="mini">Chọn</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -79,7 +67,7 @@ export default {
       params: {
         name: null,
         phoneNumber: null,
-        pageSize: 10,
+        pageSize: 5,
         pageNo: 0,
         sort: 'DESC',
         sortName: 'id'
@@ -136,6 +124,10 @@ export default {
           this.fetchData()
         })
       })
+    },
+    handleSelect(row) {
+      this.$store.dispatch('cart/setCustomerId', row.id)
+      this.$router.push({ path: '/cart/checkout' })
     }
   }
 }

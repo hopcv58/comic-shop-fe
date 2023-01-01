@@ -3,7 +3,7 @@
     <div style="display: flex; justify-content: end; margin-bottom: 20px">
       <el-button type="primary" size="mini" @click="redirectToCreate">Thêm đầu truyện</el-button>
     </div>
-    <el-form :inline="true" :model="params">
+    <el-form :inline="true" :model="params" class="form-search">
       <el-form-item label="Tên đầu truyện">
         <el-input v-model="params.name" />
       </el-form-item>
@@ -62,7 +62,7 @@
       </el-table-column>
       <el-table-column label="Giá gốc" width="80">
         <template slot-scope="scope">
-          {{ formatNumber(scope.row.price) }}
+          {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
       <el-table-column label="Còn lại" width="80">
@@ -101,6 +101,7 @@
 
 <script>
 import { handleDelete, getList } from '@/api/comic'
+import { numberFormat } from '@/utils'
 
 export default {
   name: 'ComicList',
@@ -129,6 +130,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    numberFormat,
     handleSelect(row) {
       this.$router.push({ path: `/comic/${row.id}` })
     },
@@ -143,9 +145,6 @@ export default {
         }
         this.listLoading = false
       })
-    },
-    formatNumber(value) {
-      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
     redirectToCreate() {
       this.$router.push({ path: '/comic/create' })
@@ -177,8 +176,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.el-form-item {
-  width: calc(50% - 10px);
-}
-</style>

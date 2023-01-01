@@ -7,16 +7,10 @@ export function getList(params) {
     params: params
   })
 }
-export function getById(id) {
-  return request({
-    url: `/comics/${id}`,
-    method: 'get'
-  })
-}
 
 export function handleCreate(data) {
   return request({
-    url: '/comics',
+    url: '/comic-details',
     method: 'post',
     data
   })
@@ -24,15 +18,8 @@ export function handleCreate(data) {
 
 export function handleUpdate(id, data) {
   return request({
-    url: `/comics/${id}`,
+    url: `/comic-details/${id}`,
     method: 'post',
     data
-  })
-}
-
-export function handleDelete(id) {
-  return request({
-    url: `/comics/${id}`,
-    method: 'delete'
   })
 }
