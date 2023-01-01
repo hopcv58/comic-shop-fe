@@ -5,16 +5,16 @@
     </div>
     <el-form :inline="true" :model="params" class="form-search">
       <el-form-item label="Tên đầu truyện">
-        <el-input v-model="params.name" />
+        <el-input v-model="params.name" @input="fetchData" />
       </el-form-item>
       <el-form-item label="Thể loại">
-        <el-input v-model="params.category" />
+        <el-input v-model="params.category" @input="fetchData" />
       </el-form-item>
       <el-form-item label="Tác giả">
-        <el-input v-model="params.author" />
+        <el-input v-model="params.author" @input="fetchData" />
       </el-form-item>
       <el-form-item label="Mã truyện">
-        <el-input v-model="params.comicCode" />
+        <el-input v-model="params.comicCode" @input="fetchData" />
       </el-form-item>
     </el-form>
     <el-table

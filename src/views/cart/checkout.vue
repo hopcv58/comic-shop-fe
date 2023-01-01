@@ -30,12 +30,25 @@
           {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
-      <el-table-column label="" width="75">
-        <template slot-scope="scope">
-          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">Xoá</el-button>
-        </template>
-      </el-table-column>
     </el-table>
+    <h2>Thông tin khách hàng</h2>
+    <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="120px" label-position="left" disabled>
+      <el-form-item label="Tên">
+        <el-input v-model="customer.name" />
+      </el-form-item>
+      <el-form-item label="Số điện thoại" disabled>
+        <el-input ref="phoneNumber" v-model="customer.phoneNumber" />
+      </el-form-item>
+      <el-form-item label="Giới tính" disabled>
+        <el-select v-model="customer.gender" placeholder="Bấm vào để chọn">
+          <el-option label="Nam" value="Nam" />
+          <el-option label="Nữ" value="Nữ" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="Số ngày thuê">
+        <el-input ref="phoneNumber" v-model="rentDay" />
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -43,23 +56,33 @@
 import { getById } from '@/api/comic'
 import { getList as getDetails } from '@/api/comic-detail'
 import { numberFormat } from '@/utils'
+import { getCustomer } from '@/api/customer'
 
 export default {
   data() {
     return {
       comics: [],
-      listLoading: true
+      customerId: null,
+      listLoading: true,
+      rentDay: 0,
+      customer: {
+        name: '',
+        gender: '',
+        phoneNumber: ''
+      }
     }
   },
   created() {
-    this.fetchData()
+    this.fetchComic()
+    this.fetchCustomer()
   },
   methods: {
     numberFormat,
-    fetchData() {
+    fetchComic() {
       this.listLoading = true
       let cartItems = []
       const cart = JSON.parse(localStorage.getItem('cart'))
+      this.customerId = cart.userId
       if (cart) {
         cartItems = cart.items || []
       } else {
@@ -86,6 +109,14 @@ export default {
           })
         })
       }
+    },
+    fetchCustomer() {
+      getCustomer(this.customerId).then(res => {
+        this.customer = res
+      }).catch(err => {
+        console.log(err)
+        this.$router.push({ name: 'CustomerList' })
+      })
     },
     handleDelete(row) {
       const index = this.comics.indexOf(row)
