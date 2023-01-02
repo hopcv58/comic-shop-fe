@@ -63,8 +63,6 @@
       <el-form-item label="Tổng tiền">
         <el-input ref="phoneNumber" :value="totalPayment" disabled />
       </el-form-item>
-      <br>
-      <el-button type="success" size="mini" @click="handleReturn">In phiếu trả</el-button>
     </el-form>
   </div>
 </template>
@@ -80,7 +78,7 @@ export default {
     return {
       comics: [],
       customerId: null,
-      listLoading: false,
+      listLoading: true,
       expectedRentDays: 0,
       startDate: null,
       customer: {
@@ -109,6 +107,12 @@ export default {
   },
   created() {
     this.fetchRentDetail()
+  },
+  updated() {
+    // print the page if listLoading is false and customer.name is not empty
+    if (!this.listLoading) {
+      this.handlePrint()
+    }
   },
   methods: {
     numberFormat,
@@ -164,11 +168,6 @@ export default {
       })
 
       return sums
-    },
-    handleReturn() {
-      this.$router.push({
-        path: `/print/return/${this.$route.params.id}`
-      })
     }
   }
 }

@@ -168,6 +168,12 @@ export const constantRoutes = [
         name: 'PrintCheckout',
         component: () => import('@/views/rent/print'),
         meta: { title: 'In phiếu thuê' }
+      },
+      {
+        path: 'return/:id(\\d+)',
+        name: 'PrintReturn',
+        component: () => import('@/views/rent/print-return'),
+        meta: { title: 'In phiếu trả' }
       }
     ]
   },
