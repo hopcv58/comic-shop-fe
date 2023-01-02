@@ -22,7 +22,7 @@
       :data="comics"
       element-loading-text="Loading"
       border
-      highlight-current-row
+      row-class-name="clickable-row"
       @current-change="handleSelect"
     >
       <el-table-column align="center" label="ID" width="55">
@@ -30,7 +30,7 @@
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Mã đầu truyện" min-width="150">
+      <el-table-column label="Mã đầu truyện" min-width="180">
         <template slot-scope="scope">
           {{ scope.row.comicCode }}
         </template>
@@ -60,7 +60,7 @@
           {{ scope.row.position }}
         </template>
       </el-table-column>
-      <el-table-column label="Giá gốc" width="80">
+      <el-table-column label="Giá cọc" width="80">
         <template slot-scope="scope">
           {{ numberFormat(scope.row.price) }}
         </template>

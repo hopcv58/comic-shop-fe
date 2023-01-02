@@ -5,7 +5,7 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <router-link to="/cart">
+      <router-link to="/rent/select">
         <div class="cart">
           <i class="el-icon-shopping-cart-2" />
           <span class="cart-count">{{ cartCount }}</span>

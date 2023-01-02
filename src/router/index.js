@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import Print from '@/layout/print'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -121,24 +122,52 @@ export const constantRoutes = [
   },
 
   {
-    path: '/cart',
+    path: '/rent',
     component: Layout,
-    redirect: '/cart/list',
+    redirect: '/rent/list',
     name: 'Cart',
     meta: { title: 'Thanh toán', icon: 'el-icon-shopping-cart-2' },
     children: [
       {
         path: 'list',
-        name: 'CartList',
-        component: () => import('@/views/cart/index'),
+        name: 'OrderList',
+        component: () => import('@/views/rent/index.vue'),
+        meta: { title: 'DS Đơn hàng' }
+      },
+      {
+        path: 'select',
+        name: 'SelectCustomer',
+        component: () => import('@/views/rent/select-customer.vue'),
         meta: { title: 'Chọn KH' }
       },
       {
         path: 'checkout',
         name: 'CartCheckout',
-        component: () => import('@/views/cart/checkout'),
-        meta: { title: 'Hoá đơn', activeMenu: '/cart/list' },
+        component: () => import('@/views/rent/checkout'),
+        meta: { title: 'Hoá đơn', activeMenu: '/rent/list' },
         hidden: true
+      },
+      {
+        path: 'detail/:id(\\d+)',
+        name: 'RentDetail',
+        component: () => import('@/views/rent/detail'),
+        meta: { title: 'Chi tiết', activeMenu: '/rent/list' },
+        hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/print',
+    component: Print,
+    hidden: true,
+    name: 'Print',
+    children: [
+      {
+        path: 'checkout',
+        name: 'PrintCheckout',
+        component: () => import('@/views/rent/print'),
+        meta: { title: 'In phiếu thuê' }
       }
     ]
   },

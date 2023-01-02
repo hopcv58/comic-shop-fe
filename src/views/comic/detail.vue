@@ -16,7 +16,7 @@
       <el-form-item label="Nhà xuất bản">
         <el-input v-model="comic.publisher" disabled />
       </el-form-item>
-      <el-form-item label="Giá gốc">
+      <el-form-item label="Giá cọc">
         <el-input v-model="comic.price" disabled />
       </el-form-item>
       <el-form-item label="Vị trí">
@@ -202,7 +202,7 @@ export default {
       this.fetchData()
     },
     tableRowClassName({ row }) {
-      return row.available ? 'available-row' : 'unavailable-row'
+      return row.available ? 'success-row' : 'danger-row'
     },
     addComicDetail() {
       handleCreate(this.createForm).then(() => {

@@ -119,3 +119,10 @@ export function param2Obj(url) {
 export function numberFormat(value) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
+
+export function addDays(date, days) {
+  const result = new Date(date)
+  result.setDate(result.getDate() + days)
+  // format: yyyy-mm-dd
+  return result.toISOString().slice(0, 10)
+}

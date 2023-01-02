@@ -25,29 +25,30 @@
           {{ scope.row.code }}
         </template>
       </el-table-column>
-      <el-table-column label="Giá gốc">
+      <el-table-column label="Giá cọc">
         <template slot-scope="scope">
           {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
     </el-table>
     <h2>Thông tin khách hàng</h2>
-    <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="120px" label-position="left" disabled>
+    <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="120px" label-position="left">
       <el-form-item label="Tên">
-        <el-input v-model="customer.name" />
+        <el-input v-model="customer.name" disabled />
       </el-form-item>
       <el-form-item label="Số điện thoại" disabled>
-        <el-input ref="phoneNumber" v-model="customer.phoneNumber" />
+        <el-input ref="phoneNumber" v-model="customer.phoneNumber" disabled />
       </el-form-item>
-      <el-form-item label="Giới tính" disabled>
-        <el-select v-model="customer.gender" placeholder="Bấm vào để chọn">
+      <el-form-item label="Giới tính">
+        <el-select v-model="customer.gender" disabled>
           <el-option label="Nam" value="Nam" />
           <el-option label="Nữ" value="Nữ" />
         </el-select>
       </el-form-item>
       <el-form-item label="Số ngày thuê">
-        <el-input ref="phoneNumber" v-model="rentDay" />
+        <el-input ref="phoneNumber" v-model="rentDay" autofocus />
       </el-form-item>
+      <el-button type="success" size="mini" @click="handlePrintReceipt">In phiếu thuê</el-button>
     </el-form>
   </div>
 </template>
@@ -63,8 +64,8 @@ export default {
     return {
       comics: [],
       customerId: null,
-      listLoading: true,
-      rentDay: 0,
+      listLoading: false,
+      rentDay: 1,
       customer: {
         name: '',
         gender: '',
@@ -79,7 +80,6 @@ export default {
   methods: {
     numberFormat,
     fetchComic() {
-      this.listLoading = true
       let cartItems = []
       const cart = JSON.parse(localStorage.getItem('cart'))
       this.customerId = cart.userId
@@ -146,6 +146,9 @@ export default {
       })
 
       return sums
+    },
+    handlePrintReceipt() {
+      this.$router.push('/print/checkout')
     }
   }
 }

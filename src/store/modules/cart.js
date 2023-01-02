@@ -14,10 +14,10 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const mutations = {
-  // Add an item to the cart
+  // Add an item to the rent
   ADD_ITEM(state, { comicId, comicDetailId }) {
-    // if comicId is already in the cart, add comicDetailId to the list
-    // else add a new item to the cart
+    // if comicId is already in the rent, add comicDetailId to the list
+    // else add a new item to the rent
     const item = state.items.find(item => item.comicId === comicId)
     if (item) {
       item.comicDetailIds.push(comicDetailId)
@@ -31,7 +31,7 @@ const mutations = {
   },
   REMOVE_ITEM(state, comicDetailId) {
     // remove the comicDetailId from the list
-    // if the list is empty, remove the item from the cart
+    // if the list is empty, remove the item from the rent
     const item = state.items.find(i => i.comicDetailIds.includes(comicDetailId))
     if (item) {
       item.comicDetailIds = item.comicDetailIds.filter(id => id !== comicDetailId)
@@ -54,7 +54,7 @@ const mutations = {
 }
 
 const actions = {
-  // Add an item to the cart
+  // Add an item to the rent
   addItem({ commit }, comicDetailData) {
     commit('ADD_ITEM', comicDetailData)
   },
