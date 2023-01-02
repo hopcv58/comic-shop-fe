@@ -40,10 +40,10 @@
     </el-table>
     <el-form :inline="true" :model="params" class="form-search">
       <el-form-item label="Tên KH">
-        <el-input v-model="params.name" placeholder="Tên KH" @input="fetchCartData" />
+        <el-input v-model="params.name" placeholder="Tên KH" @input="fetchCustomerData" />
       </el-form-item>
       <el-form-item label="Số ĐT">
-        <el-input v-model="params.phoneNumber" placeholder="Số ĐT" @input="fetchCartData" />
+        <el-input v-model="params.phoneNumber" placeholder="Số ĐT" @input="fetchCustomerData" />
       </el-form-item>
     </el-form>
     <el-table
@@ -97,7 +97,7 @@
 <script>
 import { getById } from '@/api/comic'
 import { getList as getDetails } from '@/api/comic-detail'
-import { getList } from '@/api/customer'
+import { getList as getCustomerList } from '@/api/customer'
 
 export default {
   data() {
@@ -123,7 +123,7 @@ export default {
   },
   created() {
     this.fetchCartData()
-    this.fetchData()
+    this.fetchCustomerData()
   },
   methods: {
     fetchCartData() {
@@ -136,6 +136,7 @@ export default {
       }
       for (let i = 0; i < cartItems?.length; i++) {
         let comic = null
+        const comics = []
         let comicDetail = []
         getById(cartItems[i].comicId).then(res => {
           comic = res
@@ -144,14 +145,15 @@ export default {
           }).then(res => {
             comicDetail = res.filter(item => cartItems[i].comicDetailIds.includes(item.id))
             for (let j = 0; j < comicDetail.length; j++) {
-              this.comics.push({
+              comics.push({
                 id: comicDetail[j].id,
                 name: comic.name,
                 code: comicDetail[j].comicDetailCode,
                 price: comic.price
               })
-              this.cartLoading = false
             }
+            this.cartLoading = false
+            this.comics = comics
           })
         })
       }
@@ -165,9 +167,9 @@ export default {
       this.$store.dispatch('cart/removeAll')
       this.comics = []
     },
-    fetchData() {
+    fetchCustomerData() {
       this.listLoading = true
-      getList(this.params).then(response => {
+      getCustomerList(this.params).then(response => {
         this.customers = response.content
         this.listProps = {
           total: response.totalElements,
@@ -187,7 +189,7 @@ export default {
     },
     changePage(page) {
       this.params.pageNo = page - 1
-      this.fetchData()
+      this.fetchCustomerData()
     },
     handleSelect(row) {
       this.$store.dispatch('cart/setCustomerId', row.id)

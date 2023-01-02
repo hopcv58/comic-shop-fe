@@ -52,16 +52,16 @@
         <el-input v-model="expectedRentDays" disabled />
       </el-form-item>
       <el-form-item label="Số ngày đã thuê">
-        <el-input ref="phoneNumber" :value="currentRentDays" disabled />
+        <el-input :value="currentRentDays" disabled />
       </el-form-item>
       <el-form-item label="Phí thuê">
-        <el-input ref="phoneNumber" :value="fee" disabled />
+        <el-input :value="numberFormat(fee)" disabled />
       </el-form-item>
       <el-form-item label="Phí phạt">
-        <el-input ref="phoneNumber" :value="fine" disabled />
+        <el-input v-model="fine" autofocus />
       </el-form-item>
       <el-form-item label="Tổng tiền">
-        <el-input ref="phoneNumber" :value="totalPayment" disabled />
+        <el-input :value="numberFormat(totalPayment)" disabled />
       </el-form-item>
       <br>
       <el-button type="success" size="mini" @click="handleReturn">In phiếu trả</el-button>
@@ -87,12 +87,13 @@ export default {
         name: '',
         gender: '',
         phoneNumber: ''
-      }
+      },
+      fine: 0
     }
   },
   computed: {
     fee() {
-      return this.expectedRentDays * this.comics.length * 2000
+      return this.currentRentDays * this.comics.length * 2000
     },
     currentRentDays() {
       const start = new Date(this.startDate)
@@ -100,11 +101,8 @@ export default {
       const diffTime = Math.abs(end - start)
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     },
-    fine() {
-      return this.currentRentDays > this.expectedRentDays ? (this.currentRentDays - this.expectedRentDays) * 4000 : 0
-    },
     totalPayment() {
-      return this.fee + this.fine
+      return parseInt(this.fee) + parseInt(this.fine)
     }
   },
   created() {
@@ -166,6 +164,7 @@ export default {
       return sums
     },
     handleReturn() {
+      // update fine and then redirect to print page
       this.$router.push({
         path: `/print/return/${this.$route.params.id}`
       })
