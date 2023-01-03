@@ -59,6 +59,16 @@
           <span v-else>Đang thuê</span>
         </template>
       </el-table-column>
+      <el-table-column label="" min-width="70">
+        <template>
+          <el-button
+            type="success"
+            size="mini"
+          >
+            Trả
+          </el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>

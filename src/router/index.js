@@ -124,21 +124,22 @@ export const constantRoutes = [
   {
     path: '/rent',
     component: Layout,
-    redirect: '/rent/list',
     name: 'Cart',
-    meta: { title: 'Thanh toán', icon: 'el-icon-shopping-cart-2' },
+    meta: { icon: 'el-icon-shopping-cart-2' },
+    redirect: '/rent/list',
     children: [
       {
         path: 'list',
-        name: 'OrderList',
-        component: () => import('@/views/rent/index.vue'),
-        meta: { title: 'DS Đơn hàng' }
+        name: 'ComicList',
+        component: () => import('@/views/comic/index'),
+        meta: { title: 'Thuê truyện', activeMenu: '/rent/list' }
       },
       {
         path: 'select',
         name: 'SelectCustomer',
         component: () => import('@/views/rent/select-customer.vue'),
-        meta: { title: 'Chọn KH' }
+        meta: { title: 'Thuê truyện', activeMenu: '/rent/list' },
+        hidden: true
       },
       {
         path: 'checkout',
@@ -153,6 +154,22 @@ export const constantRoutes = [
         component: () => import('@/views/rent/detail'),
         meta: { title: 'Chi tiết', activeMenu: '/rent/list' },
         hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/return',
+    component: Layout,
+    redirect: '/return/list',
+    name: 'Return',
+    meta: { icon: 'el-icon-shopping-cart-2' },
+    children: [
+      {
+        path: 'list',
+        name: 'OrderList',
+        component: () => import('@/views/rent/index.vue'),
+        meta: { title: 'Trả truyện' }
       }
     ]
   },

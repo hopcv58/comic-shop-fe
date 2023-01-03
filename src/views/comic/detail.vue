@@ -50,7 +50,12 @@
       </el-table-column>
       <el-table-column label="Tình trạng thuê" min-width="150">
         <template slot-scope="scope">
-          <el-select v-if="scope.row.id === editing.id" ref="select" v-model="scope.row.available" placeholder="Select">
+          <el-select
+            v-if="scope.row.id === editing.id && checkAvailable(scope.row) === true"
+            ref="select"
+            v-model="scope.row.available"
+            placeholder="Select"
+          >
             <el-option
               :value="true"
               label="Có thể thuê"
@@ -60,7 +65,7 @@
               label="Không thể thuê"
             />
           </el-select>
-          <div v-else>{{ scope.row.available === true ? 'Có thể thuê' : 'Không thể thuê' }}</div>
+          <div v-else>{{ checkAvailable(scope.row) ? 'Có thể thuê' : 'Không thể thuê' }}</div>
         </template>
       </el-table-column>
       <el-table-column label="" width="150" align="center" fixed="right">
@@ -68,7 +73,7 @@
           <el-button
             type="success"
             size="mini"
-            :disabled="scope.row.available === false || rentingComicDetails.includes(scope.row.id)"
+            :disabled="!checkAvailable(scope.row)"
             @click="handleRent(scope.row)"
           >Thuê
           </el-button>
@@ -119,9 +124,9 @@ export default {
   data() {
     return {
       comicDetails: null,
+      comicsInCart: {},
       listLoading: true,
       createDialogueVisible: false,
-      rentingComicDetails: [],
       createForm: {
         status: 'Sách mới',
         comicId: this.$route.params.id
@@ -145,12 +150,26 @@ export default {
   },
   created() {
     this.fetchData()
-    const rentingComicDetails = this.$store.state.cart.items?.find(item => item.comicId === this.params.comicId)?.comicDetailIds
-    if (rentingComicDetails) {
-      this.rentingComicDetails = [...rentingComicDetails]
-    }
+    this.getComicsInCart()
   },
   methods: {
+    getComicsInCart() {
+      const cart = JSON.parse(localStorage.getItem('cart'))
+      const comicsInCart = {}
+      for (let i = 0; i < cart?.items?.length; i++) {
+        comicsInCart[cart.items[i].comicId] = cart.items[i].comicDetailIds
+      }
+      this.comicsInCart = comicsInCart
+    },
+    checkAvailable(comicDetail) {
+      if (comicDetail.available === false) {
+        return false
+      }
+      if (this.comicsInCart[this.params.comicId]) {
+        return !this.comicsInCart[this.params.comicId].includes(comicDetail.id)
+      }
+      return true
+    },
     fetchData() {
       this.listLoading = true
       getList(this.params).then(response => {
@@ -187,11 +206,12 @@ export default {
       this.$store.dispatch('cart/addItem', {
         comicId: this.params.comicId,
         comicDetailId: row.id
-      })
-      this.rentingComicDetails.push(row.id)
-      this.$message({
-        message: 'Thêm vào giỏ hàng thành công',
-        type: 'success'
+      }).then(() => {
+        this.getComicsInCart()
+        this.$message({
+          message: 'Thêm vào giỏ hàng thành công',
+          type: 'success'
+        })
       })
     },
     handleEdit(row) {
@@ -202,7 +222,7 @@ export default {
       this.fetchData()
     },
     tableRowClassName({ row }) {
-      return row.available ? 'success-row' : 'danger-row'
+      return this.checkAvailable(row) ? 'success-row' : 'danger-row'
     },
     addComicDetail() {
       handleCreate(this.createForm).then(() => {

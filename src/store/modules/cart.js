@@ -18,6 +18,8 @@ const mutations = {
   ADD_ITEM(state, { comicId, comicDetailId }) {
     // if comicId is already in the rent, add comicDetailId to the list
     // else add a new item to the rent
+    comicId = parseInt(comicId)
+    comicDetailId = parseInt(comicDetailId)
     const item = state.items.find(item => item.comicId === comicId)
     if (item) {
       item.comicDetailIds.push(comicDetailId)

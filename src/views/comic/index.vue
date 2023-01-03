@@ -67,20 +67,26 @@
       </el-table-column>
       <el-table-column label="Còn lại" width="80">
         <template slot-scope="scope">
-          {{ scope.row.quantity }}
+          {{ calcRemainQuantity(scope.row) }}
         </template>
       </el-table-column>
-      <el-table-column label="" width="150" align="center" fixed="right">
+      <el-table-column label="" width="210" align="center" fixed="right">
         <template slot-scope="scope">
+          <el-button
+            type="success"
+            size="mini"
+            :disabled="calcRemainQuantity(scope.row) === 0"
+            @click.stop.prevent="handleAddToCart(scope.row)"
+          >Thuê</el-button>
           <el-button
             type="primary"
             size="mini"
-            @click="handleEdit(scope.row)"
+            @click.stop.prevent="handleEdit(scope.row)"
           >Sửa</el-button>
           <el-button
             type="danger"
             size="mini"
-            @click="handleDelete(scope.row)"
+            @click.stop.prevent="handleDelete(scope.row)"
           >Xoá</el-button>
         </template>
       </el-table-column>
@@ -102,6 +108,7 @@
 <script>
 import { handleDelete, getList } from '@/api/comic'
 import { numberFormat } from '@/utils'
+import { getList as getComicDetailList } from '@/api/comic-detail'
 
 export default {
   name: 'ComicList',
@@ -109,6 +116,7 @@ export default {
     return {
       comics: null,
       listLoading: true,
+      comicsInCart: {},
       params: {
         name: null,
         category: null,
@@ -128,9 +136,21 @@ export default {
   },
   created() {
     this.fetchData()
+    this.getComicsInCart()
   },
   methods: {
     numberFormat,
+    getComicsInCart() {
+      const cart = JSON.parse(localStorage.getItem('cart'))
+      const comicsInCart = {}
+      for (let i = 0; i < cart?.items?.length; i++) {
+        comicsInCart[cart.items[i].comicId] = cart.items[i].comicDetailIds
+      }
+      this.comicsInCart = comicsInCart
+    },
+    calcRemainQuantity(comic) {
+      return comic.quantity - (this.comicsInCart[comic.id]?.length || 0)
+    },
     handleSelect(row) {
       this.$router.push({ path: `/comic/${row.id}` })
     },
@@ -172,6 +192,32 @@ export default {
           this.fetchData()
         })
       })
+    },
+    handleAddToCart(row) {
+      // get first available comicDetail
+      getComicDetailList({
+        comicId: row.id,
+        available: true
+      }).then(response => {
+        for (let i = 0; i < response.length; i++) {
+          if (this.comicsInCart[row.id]) {
+            if (!this.comicsInCart[row.id].includes(response[i].id)) {
+              this.addToCartAndRefreshCartData(row.id, response[i].id)
+              break
+            }
+          } else {
+            this.addToCartAndRefreshCartData(row.id, response[i].id)
+            break
+          }
+        }
+      })
+    },
+    addToCartAndRefreshCartData(comicId, comicDetailId) {
+      this.$store.dispatch('cart/addItem', {
+        comicId,
+        comicDetailId
+      })
+      this.getComicsInCart()
     }
   }
 }

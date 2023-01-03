@@ -93,7 +93,11 @@ export default {
   },
   computed: {
     fee() {
-      return this.currentRentDays * this.comics.length * 2000
+      if (this.currentRentDays > this.expectedRentDays) {
+        return (this.expectedRentDays * 2000 + (this.currentRentDays - this.expectedRentDays) * 3000) * this.comics.length
+      } else {
+        return this.currentRentDays * this.comics.length * 2000
+      }
     },
     currentRentDays() {
       const start = new Date(this.startDate)
@@ -102,7 +106,11 @@ export default {
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     },
     totalPayment() {
-      return parseInt(this.fee) + parseInt(this.fine)
+      if (this.fine) {
+        return this.fee + this.fine
+      } else {
+        return this.fee
+      }
     }
   },
   created() {

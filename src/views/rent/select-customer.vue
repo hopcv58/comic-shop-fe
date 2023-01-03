@@ -136,7 +136,6 @@ export default {
       }
       for (let i = 0; i < cartItems?.length; i++) {
         let comic = null
-        const comics = []
         let comicDetail = []
         getById(cartItems[i].comicId).then(res => {
           comic = res
@@ -145,7 +144,7 @@ export default {
           }).then(res => {
             comicDetail = res.filter(item => cartItems[i].comicDetailIds.includes(item.id))
             for (let j = 0; j < comicDetail.length; j++) {
-              comics.push({
+              this.comics.push({
                 id: comicDetail[j].id,
                 name: comic.name,
                 code: comicDetail[j].comicDetailCode,
@@ -153,7 +152,6 @@ export default {
               })
             }
             this.cartLoading = false
-            this.comics = comics
           })
         })
       }
