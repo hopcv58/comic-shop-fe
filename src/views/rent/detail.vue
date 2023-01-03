@@ -55,7 +55,7 @@
         <el-input :value="currentRentDays" disabled />
       </el-form-item>
       <el-form-item label="Phí thuê">
-        <el-input :value="numberFormat(fee)" disabled />
+        <el-input :value="numberFormat(cost)" disabled />
       </el-form-item>
       <el-form-item label="Phí phạt">
         <el-input v-model="fine" autofocus />
@@ -71,7 +71,7 @@
 
 <script>
 import { getById as getComicById } from '@/api/comic'
-import { getById as getRentById } from '@/api/rent'
+import { getById as getRentById, handleUpdate } from '@/api/rent'
 import { getList as getComicDetails } from '@/api/comic-detail'
 import { numberFormat } from '@/utils'
 
@@ -79,11 +79,12 @@ export default {
   data() {
     return {
       comics: [],
-      customerId: null,
       listLoading: false,
       expectedRentDays: 0,
       startDate: null,
+      comicListForUpdate: [],
       customer: {
+        id: '',
         name: '',
         gender: '',
         phoneNumber: ''
@@ -92,7 +93,7 @@ export default {
     }
   },
   computed: {
-    fee() {
+    cost() {
       if (this.currentRentDays > this.expectedRentDays) {
         return (this.expectedRentDays * 2000 + (this.currentRentDays - this.expectedRentDays) * 3000) * this.comics.length
       } else {
@@ -107,9 +108,9 @@ export default {
     },
     totalPayment() {
       if (this.fine) {
-        return this.fee + this.fine
+        return parseInt(this.cost) + parseInt(this.fine)
       } else {
-        return this.fee
+        return this.cost
       }
     }
   },
@@ -121,6 +122,7 @@ export default {
     fetchRentDetail() {
       getRentById(this.$route.params.id).then(response => {
         this.customer = response.customerEntity
+        this.comicListForUpdate = response.comicList
         this.expectedRentDays = response.rentDays
         this.startDate = response.startDate
         if (response.comicList.length) {
@@ -173,8 +175,20 @@ export default {
     },
     handleReturn() {
       // update fine and then redirect to print page
-      this.$router.push({
-        path: `/print/return/${this.$route.params.id}`
+      handleUpdate(this.$route.params.id, {
+        id: this.$route.params.id,
+        customerId: this.customer.id,
+        startDate: this.startDate,
+        deposit: this.comics.reduce((a, b) => a + b.price, 0),
+        fine: parseInt(this.fine),
+        rentDays: this.expectedRentDays,
+        rentalFee: this.totalPayment,
+        renting: 0,
+        comicList: this.comicListForUpdate
+      }).then(() => {
+        this.$router.push({
+          path: `/print/return/${this.$route.params.id}`
+        })
       })
     }
   }

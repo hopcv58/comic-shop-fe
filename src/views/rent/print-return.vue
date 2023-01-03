@@ -48,14 +48,11 @@
       <el-form-item label="Ngày bắt đầu">
         <el-input v-model="startDate" disabled />
       </el-form-item>
-      <el-form-item label="Số ngày dự kiến">
-        <el-input v-model="expectedRentDays" disabled />
-      </el-form-item>
       <el-form-item label="Số ngày đã thuê">
-        <el-input ref="phoneNumber" :value="currentRentDays" disabled />
+        <el-input ref="phoneNumber" :value="rentDays" disabled />
       </el-form-item>
       <el-form-item label="Phí thuê">
-        <el-input ref="phoneNumber" :value="fee" disabled />
+        <el-input ref="phoneNumber" :value="cost" disabled />
       </el-form-item>
       <el-form-item label="Phí phạt">
         <el-input ref="phoneNumber" :value="fine" disabled />
@@ -79,8 +76,11 @@ export default {
       comics: [],
       customerId: null,
       listLoading: true,
-      expectedRentDays: 0,
       startDate: null,
+      endDate: null,
+      fine: null,
+      totalPayment: null,
+      rentDays: 0,
       customer: {
         name: '',
         gender: '',
@@ -89,20 +89,8 @@ export default {
     }
   },
   computed: {
-    fee() {
-      return this.expectedRentDays * this.comics.length * 2000
-    },
-    currentRentDays() {
-      const start = new Date(this.startDate)
-      const end = new Date()
-      const diffTime = Math.abs(end - start)
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    },
-    fine() {
-      return this.currentRentDays > this.expectedRentDays ? (this.currentRentDays - this.expectedRentDays) * 4000 : 0
-    },
-    totalPayment() {
-      return this.fee + this.fine
+    cost() {
+      return numberFormat(this.totalPayment - this.fine)
     }
   },
   created() {
@@ -122,8 +110,10 @@ export default {
     fetchRentDetail() {
       getRentById(this.$route.params.id).then(response => {
         this.customer = response.customerEntity
-        this.expectedRentDays = response.rentDays
+        this.rentDays = response.rentDays
         this.startDate = response.startDate
+        this.fine = response.fine
+        this.totalPayment = response.rentalFee
         if (response.comicList.length) {
           for (let i = 0; i < response.comicList.length; i++) {
             let comic = null
@@ -171,6 +161,9 @@ export default {
       })
 
       return sums
+    },
+    handlePrint() {
+      window.print()
     }
   }
 }

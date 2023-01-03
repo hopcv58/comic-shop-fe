@@ -179,9 +179,10 @@ export const constantRoutes = [
     component: Print,
     hidden: true,
     name: 'Print',
+    redirect: '/return/list',
     children: [
       {
-        path: 'checkout',
+        path: 'checkout/:id(\\d+)',
         name: 'PrintCheckout',
         component: () => import('@/views/rent/print'),
         meta: { title: 'In phiếu thuê' }

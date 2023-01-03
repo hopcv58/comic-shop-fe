@@ -50,7 +50,7 @@
           {{ scope.row.author }}
         </template>
       </el-table-column>
-      <el-table-column label="Nhà xuất bản" min-width="120">
+      <el-table-column label="Nhà xuất bản" min-width="200">
         <template slot-scope="scope">
           {{ scope.row.publisher }}
         </template>

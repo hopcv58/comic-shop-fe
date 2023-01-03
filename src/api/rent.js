@@ -27,3 +27,11 @@ export function getById(id) {
     method: 'get'
   })
 }
+
+export function handleUpdate(id, data) {
+  return request({
+    url: '/rent/' + id,
+    method: 'post',
+    data
+  })
+}

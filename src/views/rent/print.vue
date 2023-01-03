@@ -32,8 +32,8 @@
       </el-table-column>
     </el-table>
     <h2>Thông tin khách hàng</h2>
-    <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="120px" label-position="left">
-      <el-form-item label="Tên">
+    <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="140px" label-position="left">
+      <el-form-item label="Tên KH">
         <el-input v-model="customer.name" disabled />
       </el-form-item>
       <el-form-item label="Số điện thoại" disabled>
@@ -45,19 +45,27 @@
           <el-option label="Nữ" value="Nữ" />
         </el-select>
       </el-form-item>
-      <el-form-item label="Số ngày thuê">
-        <el-input ref="phoneNumber" v-model="rentDay" disabled />
+      <el-form-item label="Ngày bắt đầu">
+        <el-input v-model="startDate" disabled />
+      </el-form-item>
+      <el-form-item label="Số ngày dự kiến">
+        <el-input v-model="expectedRentDays" disabled />
+      </el-form-item>
+      <el-form-item label="Số ngày đã thuê">
+        <el-input ref="phoneNumber" :value="currentRentDays" disabled />
+      </el-form-item>
+      <el-form-item label="Phí thuê">
+        <el-input ref="phoneNumber" :value="cost" disabled />
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
-import { getById } from '@/api/comic'
-import { getList as getDetails } from '@/api/comic-detail'
+import { getById as getComicById } from '@/api/comic'
+import { getById as getRentById } from '@/api/rent'
+import { getList as getComicDetails } from '@/api/comic-detail'
 import { numberFormat } from '@/utils'
-import { getCustomer } from '@/api/customer'
-import { handleCreate as handleCreateReceipt } from '@/api/rent'
 
 export default {
   data() {
@@ -65,7 +73,8 @@ export default {
       comics: [],
       customerId: null,
       listLoading: true,
-      rentDay: 1,
+      expectedRentDays: 0,
+      startDate: null,
       customer: {
         name: '',
         gender: '',
@@ -73,11 +82,21 @@ export default {
       }
     }
   },
+  computed: {
+    cost() {
+      return this.expectedRentDays * this.comics.length * 2000
+    },
+    currentRentDays() {
+      const start = new Date(this.startDate)
+      const end = new Date()
+      const diffTime = Math.abs(end - start)
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    }
+  },
   created() {
-    this.fetchComic()
-    this.fetchCustomer()
+    this.fetchRentDetail()
     setTimeout(() => {
-      if (!this.listLoading && this.customer.name) {
+      if (!this.listLoading) {
         this.handlePrint()
       } else {
         setTimeout(() => {
@@ -88,53 +107,38 @@ export default {
   },
   methods: {
     numberFormat,
-    fetchComic() {
-      let cartItems = []
-      const cart = JSON.parse(localStorage.getItem('cart'))
-      this.customerId = cart.userId
-      if (cart) {
-        cartItems = cart.items || []
-      } else {
-        this.$router.push({ name: 'ComicList' })
-      }
-      for (let i = 0; i < cartItems?.length; i++) {
-        let comic = null
-        let comicDetail = []
-        getById(cartItems[i].comicId).then(res => {
-          comic = res
-          getDetails({
-            comicId: cartItems[i].comicId
-          }).then(res => {
-            comicDetail = res.filter(item => cartItems[i].comicDetailIds.includes(item.id))
-            for (let j = 0; j < comicDetail.length; j++) {
-              this.comics.push({
-                id: comicDetail[j].id,
-                name: comic.name,
-                code: comicDetail[j].comicDetailCode,
-                price: comic.price
+    fetchRentDetail() {
+      getRentById(this.$route.params.id).then(response => {
+        this.customer = response.customerEntity
+        this.expectedRentDays = response.rentDays
+        this.startDate = response.startDate
+        if (response.comicList.length) {
+          for (let i = 0; i < response.comicList.length; i++) {
+            let comic = null
+            getComicById(response.comicList[i].comicId).then(res => {
+              comic = res
+              getComicDetails({
+                comicId: response.comicList[i].comicId
+              }).then(res => {
+                for (let j = 0; j < res.length; j++) {
+                  for (let k = 0; k < response.comicList[i].comicDetailList.length; k++) {
+                    if (res[j].id === response.comicList[i].comicDetailList[k].comicDetailId) {
+                      this.comics.push({
+                        id: res[j].id,
+                        name: comic.name,
+                        code: res[j].comicDetailCode,
+                        price: comic.price
+                      })
+                      break
+                    }
+                  }
+                }
+                this.listLoading = false
               })
-              this.listLoading = false
-            }
-          })
-        })
-      }
-    },
-    fetchCustomer() {
-      getCustomer(this.customerId).then(res => {
-        this.customer = res
-      }).catch(err => {
-        console.log(err)
-        this.$router.push({ name: 'CustomerList' })
+            })
+          }
+        }
       })
-    },
-    handleDelete(row) {
-      const index = this.comics.indexOf(row)
-      this.comics.splice(index, 1)
-      this.$store.dispatch('cart/removeItem', row.id)
-    },
-    clearCart() {
-      this.$store.dispatch('cart/removeAll')
-      this.comics = []
     },
     getSummaries({ columns, data }) {
       const sums = []
@@ -155,41 +159,6 @@ export default {
       })
 
       return sums
-    },
-    handleRent() {
-      const cart = JSON.parse(localStorage.getItem('cart'))
-      let comicList = []
-      if (cart && cart.items) {
-        comicList = cart.items.map(item => {
-          return {
-            comicId: item.comicId,
-            comicDetailList: item.comicDetailIds.map(id => {
-              return {
-                comicDetailId: id
-              }
-            })
-          }
-        })
-      }
-      handleCreateReceipt({
-        rentDays: this.rentDay,
-        deposit: this.comics.reduce((a, b) => a + b.price, 0),
-        customerId: this.customerId,
-        comicList
-      }).then(res => {
-        this.$message({
-          message: 'Thành công',
-          type: 'success'
-        })
-        this.clearCart()
-        this.$router.push('/rent/detail/' + res.id)
-      }).catch(err => {
-        console.log(err)
-        this.$message({
-          message: 'Thất bại',
-          type: 'error'
-        })
-      })
     },
     handlePrint() {
       window.print()

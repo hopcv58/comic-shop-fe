@@ -48,7 +48,7 @@
       <el-form-item label="Số ngày thuê">
         <el-input ref="phoneNumber" v-model="rentDay" autofocus />
       </el-form-item>
-      <el-button type="success" size="mini" @click="handlePrintReceipt">In phiếu thuê</el-button>
+      <el-button type="success" size="mini" @click="handleRent">In phiếu thuê</el-button>
     </el-form>
   </div>
 </template>
@@ -58,6 +58,7 @@ import { getById } from '@/api/comic'
 import { getList as getDetails } from '@/api/comic-detail'
 import { numberFormat } from '@/utils'
 import { getCustomer } from '@/api/customer'
+import {handleCreate as handleCreateReceipt} from "@/api/rent";
 
 export default {
   data() {
@@ -90,7 +91,6 @@ export default {
       }
       for (let i = 0; i < cartItems?.length; i++) {
         let comic = null
-        const comics = [];
         let comicDetail = []
         getById(cartItems[i].comicId).then(res => {
           comic = res
@@ -99,14 +99,13 @@ export default {
           }).then(res => {
             comicDetail = res.filter(item => cartItems[i].comicDetailIds.includes(item.id))
             for (let j = 0; j < comicDetail.length; j++) {
-              comics.push({
+              this.comics.push({
                 id: comicDetail[j].id,
                 name: comic.name,
                 code: comicDetail[j].comicDetailCode,
                 price: comic.price
               })
             }
-            this.comics = comics
             this.listLoading = false
           })
         })
@@ -149,8 +148,36 @@ export default {
 
       return sums
     },
-    handlePrintReceipt() {
-      this.$router.push('/print/checkout')
+    handleRent() {
+      const cart = JSON.parse(localStorage.getItem('cart'))
+      let comicList = []
+      if (cart && cart.items) {
+        comicList = cart.items.map(item => {
+          return {
+            comicId: item.comicId,
+            comicDetailList: item.comicDetailIds.map(id => {
+              return {
+                comicDetailId: id
+              }
+            })
+          }
+        })
+      }
+      handleCreateReceipt({
+        rentDays: this.rentDay,
+        deposit: this.comics.reduce((a, b) => a + b.price, 0),
+        customerId: this.customerId,
+        comicList
+      }).then(res => {
+        this.clearCart()
+        this.$router.push('/print/checkout/' + res.id)
+      }).catch(err => {
+        console.log(err)
+        this.$message({
+          message: 'Tạo phiếu thuê thất bại',
+          type: 'error'
+        })
+      })
     }
   }
 }
