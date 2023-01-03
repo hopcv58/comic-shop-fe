@@ -107,12 +107,15 @@ export default {
   },
   created() {
     this.fetchRentDetail()
-  },
-  updated() {
-    // print the page if listLoading is false and customer.name is not empty
-    if (!this.listLoading) {
-      this.handlePrint()
-    }
+    setTimeout(() => {
+      if (!this.listLoading) {
+        this.handlePrint()
+      } else {
+        setTimeout(() => {
+          this.handlePrint()
+        }, 500)
+      }
+    }, 500)
   },
   methods: {
     numberFormat,

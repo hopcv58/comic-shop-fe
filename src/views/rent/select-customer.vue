@@ -38,14 +38,40 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-form :inline="true" :model="params" class="form-search">
+    <el-form :inline="true" :model="customerSearchQuery" class="form-search" style="position: relative">
       <el-form-item label="Tên KH">
-        <el-input v-model="params.name" placeholder="Tên KH" @input="fetchCustomerData" />
+        <el-input v-model="customerSearchQuery.name" placeholder="Tên KH" @input="fetchCustomerData" />
       </el-form-item>
       <el-form-item label="Số ĐT">
-        <el-input v-model="params.phoneNumber" placeholder="Số ĐT" @input="fetchCustomerData" />
+        <el-input v-model="customerSearchQuery.phoneNumber" placeholder="Số ĐT" @input="fetchCustomerData" />
       </el-form-item>
+      <el-button
+        type="primary"
+        size="mini"
+        style="position: absolute; right: 0; top: 5px"
+        @click="createCustomerDialogueVisible = true"
+      >Tạo KH</el-button>
     </el-form>
+    <el-dialog title="Shipping address" :visible.sync="createCustomerDialogueVisible">
+      <el-form :model="createCustomerForm">
+        <el-form-item label="Tên" label-width="120px">
+          <el-input v-model="createCustomerForm.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="SDT" label-width="120px">
+          <el-input v-model="createCustomerForm.phoneNumber" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="Giới tính" label-width="120px">
+          <el-select v-model="createCustomerForm.gender">
+            <el-option label="Nam" value="Nam" />
+            <el-option label="Nữ" value="Nữ" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="createCustomerDialogueVisible = false">Quay lại</el-button>
+        <el-button type="primary" @click="handleCreateCustomer">Tạo KH</el-button>
+      </span>
+    </el-dialog>
     <el-table
       v-loading="cartLoading"
       :data="customers"
@@ -56,7 +82,7 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
+          {{ listProps.currentPage * customerSearchQuery.pageSize - customerSearchQuery.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="Tên Khách hàng">
@@ -85,7 +111,7 @@
         background
         layout="prev, pager, next"
         :total="listProps.total"
-        :page-size="params.pageSize"
+        :page-size="customerSearchQuery.pageSize"
         :current-page.sync="listProps.currentPage"
         :hide-on-single-page="true"
         @current-change="changePage"
@@ -97,7 +123,7 @@
 <script>
 import { getById } from '@/api/comic'
 import { getList as getDetails } from '@/api/comic-detail'
-import { getList as getCustomerList } from '@/api/customer'
+import { createCustomer, getList as getCustomerList } from '@/api/customer'
 
 export default {
   data() {
@@ -106,7 +132,13 @@ export default {
       cartLoading: false,
       customers: null,
       listLoading: true,
-      params: {
+      createCustomerDialogueVisible: false,
+      createCustomerForm: {
+        name: '',
+        phoneNumber: '',
+        gender: 'Nam'
+      },
+      customerSearchQuery: {
         name: null,
         phoneNumber: null,
         pageSize: 5,
@@ -167,7 +199,7 @@ export default {
     },
     fetchCustomerData() {
       this.listLoading = true
-      getCustomerList(this.params).then(response => {
+      getCustomerList(this.customerSearchQuery).then(response => {
         this.customers = response.content
         this.listProps = {
           total: response.totalElements,
@@ -177,8 +209,28 @@ export default {
         this.listLoading = false
       })
     },
-    addCustomer() {
-      this.$router.push({ path: '/customer/create' })
+    handleCreateCustomer() {
+      if (this.createCustomerForm.name === '') {
+        this.$message.error('Tên khách hàng không được để trống')
+        return
+      }
+      if (this.createCustomerForm.phoneNumber === '') {
+        this.$message.error('Số điện thoại không được để trống')
+        return
+      }
+      createCustomer(this.createCustomerForm).then(res => {
+        this.createCustomerDialogueVisible = false
+        this.customerSearchQuery.name = this.createCustomerForm.name
+        this.customerSearchQuery.phoneNumber = this.createCustomerForm.phoneNumber
+        this.fetchCustomerData()
+        this.$message.success('Tạo khách hàng thành công')
+      }).catch(err => {
+        if (err?.response?.data?.message) {
+          this.$message.error(err.response.data.message)
+        } else {
+          this.$message.error('Tạo khách hàng thất bại')
+        }
+      })
     },
     handleEdit(row) {
       this.$router.push({
@@ -186,7 +238,7 @@ export default {
       })
     },
     changePage(page) {
-      this.params.pageNo = page - 1
+      this.customerSearchQuery.pageNo = page - 1
       this.fetchCustomerData()
     },
     handleSelect(row) {

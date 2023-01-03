@@ -126,33 +126,33 @@ export const constantRoutes = [
     component: Layout,
     name: 'Cart',
     meta: { icon: 'el-icon-shopping-cart-2' },
-    redirect: '/rent/list',
+    redirect: '/rent/select-comic',
     children: [
       {
-        path: 'list',
-        name: 'ComicList',
-        component: () => import('@/views/comic/index'),
-        meta: { title: 'Thuê truyện', activeMenu: '/rent/list' }
+        path: 'select-comic',
+        name: 'SelectComic',
+        component: () => import('@/views/rent/select-comic'),
+        meta: { title: 'Thuê truyện', activeMenu: '/rent/select-comic' }
       },
       {
-        path: 'select',
+        path: 'select-customer',
         name: 'SelectCustomer',
-        component: () => import('@/views/rent/select-customer.vue'),
-        meta: { title: 'Thuê truyện', activeMenu: '/rent/list' },
+        component: () => import('@/views/rent/select-customer'),
+        meta: { title: 'Thuê truyện', activeMenu: '/rent/select-comic' },
         hidden: true
       },
       {
         path: 'checkout',
         name: 'CartCheckout',
         component: () => import('@/views/rent/checkout'),
-        meta: { title: 'Hoá đơn', activeMenu: '/rent/list' },
+        meta: { title: 'Hoá đơn', activeMenu: '/rent/select-comic' },
         hidden: true
       },
       {
         path: 'detail/:id(\\d+)',
         name: 'RentDetail',
         component: () => import('@/views/rent/detail'),
-        meta: { title: 'Chi tiết', activeMenu: '/rent/list' },
+        meta: { title: 'Chi tiết', activeMenu: '/rent/select-comic' },
         hidden: true
       }
     ]

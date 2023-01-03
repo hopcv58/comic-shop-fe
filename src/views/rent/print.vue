@@ -46,7 +46,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Số ngày thuê">
-        <el-input ref="phoneNumber" v-model="rentDay" autofocus />
+        <el-input ref="phoneNumber" v-model="rentDay" disabled />
       </el-form-item>
     </el-form>
   </div>
@@ -76,12 +76,15 @@ export default {
   created() {
     this.fetchComic()
     this.fetchCustomer()
-  },
-  updated() {
-    // print the page if listLoading is false and customer.name is not empty
-    if (!this.listLoading && this.customer.name) {
-      this.handlePrint()
-    }
+    setTimeout(() => {
+      if (!this.listLoading && this.customer.name) {
+        this.handlePrint()
+      } else {
+        setTimeout(() => {
+          this.handlePrint()
+        }, 500)
+      }
+    }, 500)
   },
   methods: {
     numberFormat,
