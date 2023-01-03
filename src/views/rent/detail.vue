@@ -58,13 +58,13 @@
         <el-input :value="numberFormat(cost)" disabled />
       </el-form-item>
       <el-form-item label="Phí phạt">
-        <el-input v-model="fine" autofocus />
+        <el-input v-model="fine" :autofocus="renting" :disabled="!renting" />
       </el-form-item>
       <el-form-item label="Tổng tiền">
         <el-input :value="numberFormat(totalPayment)" disabled />
       </el-form-item>
       <br>
-      <el-button type="success" size="mini" @click="handleReturn">In phiếu trả</el-button>
+      <el-button v-if="renting" type="success" size="mini" @click="handleReturn">In phiếu trả</el-button>
     </el-form>
   </div>
 </template>
@@ -83,6 +83,7 @@ export default {
       expectedRentDays: 0,
       startDate: null,
       comicListForUpdate: [],
+      renting: false,
       customer: {
         id: '',
         name: '',
@@ -125,6 +126,8 @@ export default {
         this.comicListForUpdate = response.comicList
         this.expectedRentDays = response.rentDays
         this.startDate = response.startDate
+        this.fine = response.fine ? response.fine : 0
+        this.renting = response.renting
         if (response.comicList.length) {
           for (let i = 0; i < response.comicList.length; i++) {
             let comic = null

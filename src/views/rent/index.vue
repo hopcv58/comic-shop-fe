@@ -60,8 +60,9 @@
         </template>
       </el-table-column>
       <el-table-column label="" min-width="70">
-        <template>
+        <template slot-scope="scope">
           <el-button
+            v-if="scope.row.renting"
             type="success"
             size="mini"
           >
@@ -114,7 +115,7 @@ export default {
           return 'success-row clickable-row'
         }
       } else {
-        return 'clickable-row'
+        return 'clickable-row disabled-row'
       }
     },
     getCustomerByKeyword(keyword, cb) {
@@ -187,7 +188,7 @@ export default {
     },
     handleSelect(row) {
       this.$router.push({
-        path: '/rent/detail' + '/' + row.id
+        path: '/return/detail' + '/' + row.id
       })
     }
   }

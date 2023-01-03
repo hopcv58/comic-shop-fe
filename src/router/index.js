@@ -138,7 +138,7 @@ export const constantRoutes = [
         path: 'select-customer',
         name: 'SelectCustomer',
         component: () => import('@/views/rent/select-customer'),
-        meta: { title: 'Thuê truyện', activeMenu: '/rent/select-comic' },
+        meta: { title: 'Chọn KH', activeMenu: '/rent/select-comic' },
         hidden: true
       },
       {
@@ -146,13 +146,6 @@ export const constantRoutes = [
         name: 'CartCheckout',
         component: () => import('@/views/rent/checkout'),
         meta: { title: 'Hoá đơn', activeMenu: '/rent/select-comic' },
-        hidden: true
-      },
-      {
-        path: 'detail/:id(\\d+)',
-        name: 'RentDetail',
-        component: () => import('@/views/rent/detail'),
-        meta: { title: 'Chi tiết', activeMenu: '/rent/select-comic' },
         hidden: true
       }
     ]
@@ -170,6 +163,13 @@ export const constantRoutes = [
         name: 'OrderList',
         component: () => import('@/views/rent/index.vue'),
         meta: { title: 'Trả truyện' }
+      },
+      {
+        path: 'detail/:id(\\d+)',
+        name: 'RentDetail',
+        component: () => import('@/views/rent/detail'),
+        meta: { title: 'Chi tiết', activeMenu: '/return/list' },
+        hidden: true
       }
     ]
   },
