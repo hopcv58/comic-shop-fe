@@ -58,7 +58,7 @@ import { getById } from '@/api/comic'
 import { getList as getDetails } from '@/api/comic-detail'
 import { numberFormat } from '@/utils'
 import { getCustomer } from '@/api/customer'
-import {handleCreate as handleCreateReceipt} from "@/api/rent";
+import { handleCreate as handleCreateReceipt } from '@/api/rent'
 
 export default {
   data() {

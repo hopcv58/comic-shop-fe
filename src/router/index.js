@@ -55,7 +55,33 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/analysis',
+    component: Layout,
+    redirect: '/analysis/list',
+    name: 'Analysis',
+    meta: { title: 'Thống kê', icon: 'el-icon-s-data' },
+    children: [
+      {
+        path: 'listCustomerRenting',
+        name: 'CustomerRentingList',
+        component: () => import('@/views/analysis/CustomerRenting'),
+        meta: { title: 'KH chưa trả truyện' }
+      },
+      {
+        path: 'listComicRenting',
+        name: 'ComicRentingList',
+        component: () => import('@/views/analysis/ComicRenting'),
+        meta: { title: 'Truyện chưa trả' }
+      },
+      {
+        path: 'topComic',
+        name: 'TopComic',
+        component: () => import('@/views/analysis/TopComic'),
+        meta: { title: 'Top truyện hot' }
+      }
+    ]
+  },
   {
     path: '/customer',
     component: Layout,
