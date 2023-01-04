@@ -15,6 +15,13 @@ export function handleCreate(data) {
   })
 }
 
+export function getById(id) {
+  return request({
+    url: '/users/' + id,
+    method: 'get'
+  })
+}
+
 export function handleUpdate(id, data) {
   return request({
     url: `/users/${id}`,
