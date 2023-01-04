@@ -4,7 +4,7 @@
       <el-button type="primary" size="mini" @click="redirectToCreate">Thêm quyển mới</el-button>
     </div>
     <el-form :inline="true" :model="comic" class="form-search">
-      <el-form-item label="Tên đầu truyện">
+      <el-form-item label="Tên truyện">
         <el-input v-model="comic.name" disabled />
       </el-form-item>
       <el-form-item label="Thể loại">
@@ -70,13 +70,13 @@
       </el-table-column>
       <el-table-column label="" width="150" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            type="success"
-            size="mini"
-            :disabled="!checkAvailable(scope.row)"
-            @click="handleRent(scope.row)"
-          >Thuê
-          </el-button>
+<!--          <el-button-->
+<!--            type="success"-->
+<!--            size="mini"-->
+<!--            :disabled="!checkAvailable(scope.row)"-->
+<!--            @click="handleRent(scope.row)"-->
+<!--          >Thuê-->
+<!--          </el-button>-->
           <el-button
             v-if="scope.row.id === editing.id"
             type="warning"
@@ -193,6 +193,7 @@ export default {
       this.$refs.table.setCurrentRow(null)
       handleUpdate(this.editing.id, this.editing).then(() => {
         this.fetchData()
+        this.$message.success('Cập nhật thông tin truyện thành công')
       })
       this.editing = {
         id: null,
@@ -228,6 +229,7 @@ export default {
       handleCreate(this.createForm).then(() => {
         this.fetchData()
         this.createDialogueVisible = false
+        this.$message.success('Thêm truyện thành công')
       })
     }
   }

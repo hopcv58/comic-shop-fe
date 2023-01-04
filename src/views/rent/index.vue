@@ -90,7 +90,7 @@ export default {
         name: ''
       },
       params: {
-        pageSize: 10,
+        pageSize: 5,
         pageNo: 0,
         sort: 'DESC',
         sortName: 'id'

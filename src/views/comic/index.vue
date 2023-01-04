@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <div style="display: flex; justify-content: end; margin-bottom: 20px">
-      <el-button type="primary" size="mini" @click="redirectToCreate">Thêm đầu truyện</el-button>
+      <el-button type="primary" size="mini" @click="redirectToCreate">Thêm truyện</el-button>
     </div>
     <el-form :inline="true" :model="params" class="form-search">
-      <el-form-item label="Tên đầu truyện">
+      <el-form-item label="Tên truyện">
         <el-input v-model="params.name" @input="fetchData" />
       </el-form-item>
       <el-form-item label="Thể loại">
@@ -30,14 +30,24 @@
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Mã đầu truyện" min-width="180">
+      <el-table-column label="Mã truyện " min-width="180">
         <template slot-scope="scope">
           {{ scope.row.comicCode }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên đầu truyện" min-width="250">
+      <el-table-column label="Tên truyện " min-width="250">
         <template slot-scope="scope">
           {{ scope.row.name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Còn lại" width="80">
+        <template slot-scope="scope">
+          {{ calcRemainQuantity(scope.row) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Giá cọc" width="80">
+        <template slot-scope="scope">
+          {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
       <el-table-column label="Thể loại" min-width="120">
@@ -60,24 +70,14 @@
           {{ scope.row.position }}
         </template>
       </el-table-column>
-      <el-table-column label="Giá cọc" width="80">
-        <template slot-scope="scope">
-          {{ numberFormat(scope.row.price) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Còn lại" width="80">
-        <template slot-scope="scope">
-          {{ calcRemainQuantity(scope.row) }}
-        </template>
-      </el-table-column>
       <el-table-column label="" width="210" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button
-            type="success"
-            size="mini"
-            :disabled="calcRemainQuantity(scope.row) === 0"
-            @click.stop.prevent="handleAddToCart(scope.row)"
-          >Thuê</el-button>
+<!--          <el-button-->
+<!--            type="success"-->
+<!--            size="mini"-->
+<!--            :disabled="calcRemainQuantity(scope.row) === 0"-->
+<!--            @click.stop.prevent="handleAddToCart(scope.row)"-->
+<!--          >Thuê</el-button>-->
           <el-button
             type="primary"
             size="mini"
@@ -122,7 +122,7 @@ export default {
         category: null,
         author: null,
         comicCode: null,
-        pageSize: 10,
+        pageSize: 5,
         pageNo: 0,
         sort: 'DESC',
         sortName: 'id'

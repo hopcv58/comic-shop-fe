@@ -79,7 +79,7 @@ export default {
       params: {
         name: null,
         phoneNumber: null,
-        pageSize: 10,
+        pageSize: 5,
         pageNo: 0,
         sort: 'DESC',
         sortName: 'id'

@@ -15,7 +15,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên đầu sách">
+      <el-table-column label="Tên truyện">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>

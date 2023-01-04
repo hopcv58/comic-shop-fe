@@ -15,7 +15,7 @@
           {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên đầu sách">
+      <el-table-column label="Tên truyện">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
@@ -189,6 +189,7 @@ export default {
         renting: 0,
         comicList: this.comicListForUpdate
       }).then(() => {
+        this.$message.success('Tạo phiếu trả thành công')
         this.$router.push({
           path: `/print/return/${this.$route.params.id}`
         })

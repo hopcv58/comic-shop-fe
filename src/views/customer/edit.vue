@@ -60,10 +60,10 @@ export default {
         this.$message.error('Vui lòng nhập số điện thoại hợp lệ')
         return
       }
-      if (!this.form.gender) {
-        this.$message.error('Vui lòng chọn giới tính')
-        return
-      }
+      // if (!this.form.gender) {
+      //   this.$message.error('Vui lòng chọn giới tính')
+      //   return
+      // }
       updateCustomer(this.$route.params.id, this.form).then(res => {
         this.$message.success('Cập nhật khách hàng thành công')
         this.$router.push({ name: 'CustomerList' })

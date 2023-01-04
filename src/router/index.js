@@ -90,32 +90,32 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/comic/list',
     name: 'Comic',
-    meta: { title: 'Quản lý đầu truyện', icon: 'el-icon-notebook-2' },
+    meta: { title: 'Quản lý truyện tranh', icon: 'el-icon-notebook-2' },
     children: [
       {
         path: 'list',
         name: 'ComicList',
         component: () => import('@/views/comic/index'),
-        meta: { title: 'Danh sách đầu truyện' }
+        meta: { title: 'Danh sách truyện tranh' }
       },
       {
         path: 'create',
         name: 'ComicCreate',
         component: () => import('@/views/comic/create'),
-        meta: { title: 'Thêm đầu truyện mới' }
+        meta: { title: 'Thêm truyện mới' }
       },
       {
         path: 'edit/:id(\\d+)',
         name: 'ComicEdit',
         component: () => import('@/views/comic/edit'),
-        meta: { title: 'Sửa thông tin đầu truyện', noCache: true, activeMenu: '/comic/list' },
+        meta: { title: 'Sửa thông tin truyện', noCache: true, activeMenu: '/comic/list' },
         hidden: true
       },
       {
         path: ':id(\\d+)',
         name: 'ComicDetail',
         component: () => import('@/views/comic/detail'),
-        meta: { title: 'Thông tin chi tiết đầu truyện', noCache: true, activeMenu: '/comic/list' },
+        meta: { title: 'Thông tin chi tiết truyện', noCache: true, activeMenu: '/comic/list' },
         hidden: true
       }
     ]
@@ -168,7 +168,7 @@ export const constantRoutes = [
         path: 'detail/:id(\\d+)',
         name: 'RentDetail',
         component: () => import('@/views/rent/detail'),
-        meta: { title: 'Chi tiết', activeMenu: '/return/list' },
+        meta: { title: 'Danh sách ', activeMenu: '/return/list' },
         hidden: true
       }
     ]

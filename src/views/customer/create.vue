@@ -49,10 +49,10 @@ export default {
         this.$message.error('Vui lòng nhập số điện thoại hợp lệ')
         return
       }
-      if (!this.form.gender) {
-        this.$message.error('Vui lòng chọn giới tính')
-        return
-      }
+      // if (!this.form.gender) {
+      //   this.$message.error('Vui lòng chọn giới tính')
+      //   return
+      // }
       createCustomer(this.form).then(res => {
         this.$message.success('Thêm khách hàng thành công')
         this.$router.push({ name: 'CustomerList' })

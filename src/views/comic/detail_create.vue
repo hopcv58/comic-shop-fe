@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" style="">
-    <h2>Nhập thông tin đầu truyện</h2>
+    <h2>Nhập thông tin truyện</h2>
     <el-form ref="form" :model="form" label-width="120px" label-position="left">
       <el-form-item label="Tên">
         <el-input v-model="form.name" />

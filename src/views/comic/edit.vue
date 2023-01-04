@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" style="">
-    <h2>Sửa thông tin đầu truyện</h2>
+    <h2>Sửa thông tin truyện</h2>
     <el-form ref="form" :model="form" label-width="120px" label-position="left">
       <el-form-item label="Mã Truyện">
         <el-input v-model="form.comicCode" disabled />

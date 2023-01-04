@@ -1,6 +1,6 @@
 <template>
   <div class="app-container" style="">
-    <h2>Nhập thông tin đầu truyện</h2>
+    <h2>Nhập thông tin truyện</h2>
     <el-form ref="form" :model="form" label-width="120px" label-position="left">
       <el-form-item label="Tên">
         <el-input v-model="form.name" />
@@ -70,10 +70,10 @@ export default {
         this.$message.error('Vui lòng nhập tên thể loại')
         return
       }
-      if (!this.form.position) {
-        this.$message.error('Vui lòng nhập vị trí')
-        return
-      }
+      // if (!this.form.position) {
+      //   this.$message.error('Vui lòng nhập vị trí')
+      //   return
+      // }
       if (!this.form.price) {
         this.$message.error('Vui lòng nhập giá tiền')
         return

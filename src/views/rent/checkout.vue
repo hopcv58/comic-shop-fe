@@ -171,6 +171,7 @@ export default {
       }).then(res => {
         this.clearCart()
         this.$router.push('/print/checkout/' + res.id)
+        this.$message.success('Tạo phiếu thuê thành công')
       }).catch(err => {
         console.log(err)
         this.$message({

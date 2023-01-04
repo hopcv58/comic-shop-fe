@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :inline="true" :model="params" class="form-search">
-      <el-form-item label="Tên đầu truyện">
+      <el-form-item label="Tên truyện ">
         <el-input v-model="params.name" @input="fetchData" />
       </el-form-item>
       <el-form-item label="Thể loại">
@@ -27,14 +27,24 @@
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Mã đầu truyện" min-width="180">
+      <el-table-column label="Mã truyện " min-width="180">
         <template slot-scope="scope">
           {{ scope.row.comicCode }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên đầu truyện" min-width="250">
+      <el-table-column label="Tên truyện " min-width="250">
         <template slot-scope="scope">
           {{ scope.row.name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Còn lại" width="80">
+        <template slot-scope="scope">
+          {{ calcRemainQuantity(scope.row) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="Giá cọc" width="80">
+        <template slot-scope="scope">
+          {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
       <el-table-column label="Thể loại" min-width="120">
@@ -55,16 +65,6 @@
       <el-table-column label="Vị trí" min-width="120">
         <template slot-scope="scope">
           {{ scope.row.position }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Giá cọc" width="80">
-        <template slot-scope="scope">
-          {{ numberFormat(scope.row.price) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Còn lại" width="80">
-        <template slot-scope="scope">
-          {{ calcRemainQuantity(scope.row) }}
         </template>
       </el-table-column>
       <el-table-column label="" width="90" align="center" fixed="right">
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { handleDelete, getList } from '@/api/comic'
+import { getList } from '@/api/comic'
 import { numberFormat } from '@/utils'
 import { getList as getComicDetailList } from '@/api/comic-detail'
 
@@ -112,7 +112,7 @@ export default {
         category: null,
         author: null,
         comicCode: null,
-        pageSize: 10,
+        pageSize: 5,
         pageNo: 0,
         sort: 'DESC',
         sortName: 'id'
@@ -173,6 +173,7 @@ export default {
           if (this.comicsInCart[row.id]) {
             if (!this.comicsInCart[row.id].includes(response[i].id)) {
               this.addToCartAndRefreshCartData(row.id, response[i].id)
+              this.$message.success('Thêm sách vào danh sách thuê thành công')
               break
             }
           } else {
