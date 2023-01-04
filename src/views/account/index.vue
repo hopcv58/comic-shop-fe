@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <div style="display: flex; justify-content: end; margin-bottom: 20px">
-      <el-button type="primary" size="mini" @click="addCustomer">Thêm KH</el-button>
+      <el-button type="primary" size="mini" @click="addAccount">Tạo tài khoản</el-button>
     </div>
     <el-form :inline="true" :model="params" class="form-search">
-      <el-form-item label="Tên KH">
-        <el-input v-model="params.name" placeholder="Tên KH" @input="fetchData" />
+      <el-form-item label="Tên đăng nhập">
+        <el-input v-model="params.username" placeholder="Tên đăng nhập" @input="fetchData" />
       </el-form-item>
-      <el-form-item label="Số ĐT">
-        <el-input v-model="params.phoneNumber" placeholder="Số ĐT" @input="fetchData" />
+      <el-form-item label="Tên">
+        <el-input v-model="params.email" placeholder="Tên" @input="fetchData" />
       </el-form-item>
     </el-form>
     <el-table
       v-loading="listLoading"
-      :data="customers"
+      :data="accounts"
       element-loading-text="Loading"
       border
       fit
@@ -21,22 +21,22 @@
     >
       <el-table-column align="center" label="STT" width="95">
         <template slot-scope="scope">
-          {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
+          {{ scope.$index + 1 }}
         </template>
       </el-table-column>
-      <el-table-column label="Tên Khách hàng">
+      <el-table-column label="Tên">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.email }}
         </template>
       </el-table-column>
-      <el-table-column label="Giới tính" width="110" align="center">
+      <el-table-column label="Tên đăng nhập" width="210" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.gender }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Số điện thoại" width="180" align="center">
+      <el-table-column label="Vai trò" width="180" align="center">
         <template slot-scope="scope">
-          {{ scope.row.phoneNumber }}
+          {{ isAdmin(scope.row) ? 'Quản trị viên' : 'Nhân viên' }}
         </template>
       </el-table-column>
       <el-table-column label="" width="180" align="center">
@@ -54,40 +54,20 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="display: flex; justify-content: center; margin-top: 20px">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="listProps.total"
-        :page-size="params.pageSize"
-        :current-page.sync="listProps.currentPage"
-        :hide-on-single-page="true"
-        @current-change="changePage"
-      />
-    </div>
   </div>
 </template>
 
 <script>
-import { deleteCustomer, getList } from '@/api/customer'
+import { handleDelete, getList } from '@/api/account'
 
 export default {
   data() {
     return {
-      customers: null,
+      accounts: null,
       listLoading: true,
       params: {
-        name: null,
-        phoneNumber: null,
-        pageSize: 5,
-        pageNo: 0,
-        sort: 'DESC',
-        sortName: 'id'
-      },
-      listProps: {
-        total: 1,
-        totalPage: 1,
-        currentPage: 1
+        email: null,
+        username: null
       }
     }
   },
@@ -98,26 +78,20 @@ export default {
     fetchData() {
       this.listLoading = true
       getList(this.params).then(response => {
-        this.customers = response.content
-        this.listProps = {
-          total: response.totalElements,
-          totalPage: response.totalPages,
-          currentPage: response.number + 1
-        }
+        this.accounts = response
         this.listLoading = false
       })
     },
-    addCustomer() {
-      this.$router.push({ path: '/customer/create' })
+    isAdmin(account) {
+      return account.roles.some(role => role.name === 'ROLE_ADMIN')
+    },
+    addAccount() {
+      this.$router.push({ path: '/account/create' })
     },
     handleEdit(row) {
       this.$router.push({
-        path: '/customer/edit' + '/' + row.id
+        path: '/account/edit' + '/' + row.id
       })
-    },
-    changePage(page) {
-      this.params.pageNo = page - 1
-      this.fetchData()
     },
     handleDelete(row) {
       this.$confirm('This will permanently delete the customer. Continue?', 'Warning', {
@@ -125,7 +99,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
-        deleteCustomer(row.id).then(() => {
+        handleDelete(row.id).then(() => {
           this.$message({
             type: 'success',
             message: 'Delete successfully!'
@@ -137,8 +111,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-.el-form-item {
-  width: calc(50% - 10px);
-}
-</style>

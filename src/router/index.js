@@ -55,7 +55,7 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/customer/list',
     name: 'Customer',
-    meta: { title: 'Quản lý khách hàng', icon: 'el-icon-user-solid' },
+    meta: { title: 'Quản lý khách hàng', icon: 'el-icon-s-custom' },
     children: [
       {
         path: 'list',
@@ -220,6 +220,41 @@ export const asyncRoutes = [
         name: 'TopComic',
         component: () => import('@/views/analysis/TopComic'),
         meta: { title: 'Top 5 truyện hot', roles: ['ROLE_ADMIN'] }
+      }
+    ]
+  },
+
+  {
+    path: '/account',
+    component: Layout,
+    redirect: '/account/list',
+    name: 'Account',
+    meta: { title: 'Quản lý tài khoản', icon: 'el-icon-user' },
+    children: [
+      {
+        path: 'list',
+        name: 'AccountList',
+        component: () => import('@/views/account/index'),
+        meta: { title: 'Danh sách tài khoản', roles: ['ROLE_ADMIN'] }
+      },
+      {
+        path: 'create',
+        name: 'AccountCreate',
+        component: () => import('@/views/account/create'),
+        meta: { title: 'Tạo tài khoản', roles: ['ROLE_ADMIN'] }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        name: 'AccountEdit',
+        component: () => import('@/views/account/edit'),
+        meta: { title: 'Sửa thông tin', roles: ['ROLE_ADMIN'], activeMenu: '/account/list' },
+        hidden: true,
+      },
+      {
+        path: 'change-password',
+        name: 'PasswordChange',
+        component: () => import('@/views/account/password-change'),
+        meta: { title: 'Thay đổi mật khẩu', roles: ['ROLE_ADMIN', 'ROLE_USER'] }
       }
     ]
   },
