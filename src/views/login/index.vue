@@ -105,8 +105,10 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push('/')
-            this.loading = false
+            this.$nextTick(() => {
+              this.loading = false
+              window.location = '/'
+            })
           }).catch(() => {
             this.loading = false
           })

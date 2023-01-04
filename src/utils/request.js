@@ -58,7 +58,9 @@ service.interceptors.response.use(
   },
   error => {
     if (error.response.status === 401) {
-      store.dispatch('user/logout')
+      store.dispatch('user/resetToken').then(() => {
+        location.reload()
+      })
     }
     console.log('err' + error) // for debug
     // Message({

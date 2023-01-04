@@ -70,13 +70,13 @@
       </el-table-column>
       <el-table-column label="" width="150" align="center" fixed="right">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            type="success"-->
-<!--            size="mini"-->
-<!--            :disabled="!checkAvailable(scope.row)"-->
-<!--            @click="handleRent(scope.row)"-->
-<!--          >Thuê-->
-<!--          </el-button>-->
+          <el-button
+            type="success"
+            size="mini"
+            :disabled="!checkAvailable(scope.row)"
+            @click="handleRent(scope.row)"
+          >Thuê
+          </el-button>
           <el-button
             v-if="scope.row.id === editing.id"
             type="warning"

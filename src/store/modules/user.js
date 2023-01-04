@@ -41,8 +41,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
         commit('SET_TOKEN', response.accessToken)
-        commit('SET_NAME', response.username)
         commit('SET_ROLES', response.roles)
+        commit('SET_NAME', response.username)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         setToken(response.accessToken)
         resolve()

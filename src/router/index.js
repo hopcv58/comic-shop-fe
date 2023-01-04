@@ -194,33 +194,6 @@ export const constantRoutes = [
         meta: { title: 'In phiếu trả' }
       }
     ]
-  },
-  {
-    path: '/analysis',
-    component: Layout,
-    redirect: '/analysis/list',
-    name: 'Analysis',
-    meta: { title: 'Thống kê', icon: 'el-icon-s-data' },
-    children: [
-      {
-        path: 'listCustomerRenting',
-        name: 'CustomerRentingList',
-        component: () => import('@/views/analysis/CustomerRenting'),
-        meta: { title: 'KH đang thuê truyện' }
-      },
-      {
-        path: 'listComicRenting',
-        name: 'ComicRentingList',
-        component: () => import('@/views/analysis/ComicRenting'),
-        meta: { title: 'Truyện đang được thuê' }
-      },
-      {
-        path: 'topComic',
-        name: 'TopComic',
-        component: () => import('@/views/analysis/TopComic'),
-        meta: { title: 'Top 5 truyện hot' }
-      }
-    ]
   }
 ]
 
@@ -230,16 +203,29 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
-    path: 'external-link',
+    path: '/analysis',
     component: Layout,
+    redirect: '/analysis/list',
+    name: 'Analysis',
+    meta: { title: 'Thống kê', icon: 'el-icon-s-data', roles: ['ROLE_ADMIN'] },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: {
-          title: 'External Link',
-          icon: 'link',
-          roles: ['ROLE_USER']
-        }
+        path: 'listCustomerRenting',
+        name: 'CustomerRentingList',
+        component: () => import('@/views/analysis/CustomerRenting'),
+        meta: { title: 'KH đang thuê truyện', roles: ['ROLE_ADMIN'] }
+      },
+      {
+        path: 'listComicRenting',
+        name: 'ComicRentingList',
+        component: () => import('@/views/analysis/ComicRenting'),
+        meta: { title: 'Truyện đang được thuê', roles: ['ROLE_ADMIN'] }
+      },
+      {
+        path: 'topComic',
+        name: 'TopComic',
+        component: () => import('@/views/analysis/TopComic'),
+        meta: { title: 'Top 5 truyện hot', roles: ['ROLE_ADMIN'] }
       }
     ]
   },

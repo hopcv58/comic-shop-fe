@@ -70,14 +70,8 @@
           {{ scope.row.position }}
         </template>
       </el-table-column>
-      <el-table-column label="" width="210" align="center" fixed="right">
+      <el-table-column label="" width="150" align="center" fixed="right">
         <template slot-scope="scope">
-<!--          <el-button-->
-<!--            type="success"-->
-<!--            size="mini"-->
-<!--            :disabled="calcRemainQuantity(scope.row) === 0"-->
-<!--            @click.stop.prevent="handleAddToCart(scope.row)"-->
-<!--          >Thuê</el-button>-->
           <el-button
             type="primary"
             size="mini"
