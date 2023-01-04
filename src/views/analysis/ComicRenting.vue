@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <h2>Danh sách truyện đang được thuê</h2>
     <el-table
       v-loading="listLoading"
       :data="comics"

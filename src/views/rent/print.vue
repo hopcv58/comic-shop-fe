@@ -51,12 +51,6 @@
       <el-form-item label="Số ngày dự kiến">
         <el-input v-model="expectedRentDays" disabled />
       </el-form-item>
-      <el-form-item label="Số ngày đã thuê">
-        <el-input ref="phoneNumber" :value="currentRentDays" disabled />
-      </el-form-item>
-      <el-form-item label="Phí thuê">
-        <el-input ref="phoneNumber" :value="cost" disabled />
-      </el-form-item>
     </el-form>
   </div>
 </template>

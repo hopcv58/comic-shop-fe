@@ -165,6 +165,7 @@ export default {
     },
     handleAddToCart(row) {
       // get first available comicDetail
+      this.$message.success('Thêm sách vào danh sách thuê thành công')
       getComicDetailList({
         comicId: row.id,
         available: true
@@ -173,7 +174,6 @@ export default {
           if (this.comicsInCart[row.id]) {
             if (!this.comicsInCart[row.id].includes(response[i].id)) {
               this.addToCartAndRefreshCartData(row.id, response[i].id)
-              this.$message.success('Thêm sách vào danh sách thuê thành công')
               break
             }
           } else {

@@ -55,33 +55,7 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-  {
-    path: '/analysis',
-    component: Layout,
-    redirect: '/analysis/list',
-    name: 'Analysis',
-    meta: { title: 'Thống kê', icon: 'el-icon-s-data' },
-    children: [
-      {
-        path: 'listCustomerRenting',
-        name: 'CustomerRentingList',
-        component: () => import('@/views/analysis/CustomerRenting'),
-        meta: { title: 'KH chưa trả truyện' }
-      },
-      {
-        path: 'listComicRenting',
-        name: 'ComicRentingList',
-        component: () => import('@/views/analysis/ComicRenting'),
-        meta: { title: 'Truyện chưa trả' }
-      },
-      {
-        path: 'topComic',
-        name: 'TopComic',
-        component: () => import('@/views/analysis/TopComic'),
-        meta: { title: 'Top truyện hot' }
-      }
-    ]
-  },
+
   {
     path: '/customer',
     component: Layout,
@@ -182,13 +156,13 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/return/list',
     name: 'Return',
-    meta: { icon: 'el-icon-shopping-cart-2' },
+    meta: { icon: 'el-icon-sold-out' },
     children: [
       {
         path: 'list',
         name: 'OrderList',
         component: () => import('@/views/rent/index.vue'),
-        meta: { title: 'Trả truyện' }
+        meta: { title: 'Danh sách phiếu thuê' }
       },
       {
         path: 'detail/:id(\\d+)',
@@ -221,16 +195,30 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
-    path: '/form',
+    path: '/analysis',
     component: Layout,
+    redirect: '/analysis/list',
+    name: 'Analysis',
+    meta: { title: 'Thống kê', icon: 'el-icon-s-data' },
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'listCustomerRenting',
+        name: 'CustomerRentingList',
+        component: () => import('@/views/analysis/CustomerRenting'),
+        meta: { title: 'KH đang thuê truyện' }
+      },
+      {
+        path: 'listComicRenting',
+        name: 'ComicRentingList',
+        component: () => import('@/views/analysis/ComicRenting'),
+        meta: { title: 'Truyện đang được thuê' }
+      },
+      {
+        path: 'topComic',
+        name: 'TopComic',
+        component: () => import('@/views/analysis/TopComic'),
+        meta: { title: 'Top 5 truyện hot' }
       }
     ]
   }
@@ -241,64 +229,6 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
   {
     path: 'external-link',
     component: Layout,
