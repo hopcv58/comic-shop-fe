@@ -10,7 +10,7 @@
       :summary-method="getSummaries"
       show-summary
     >
-      <el-table-column align="center" label="ID" width="135">
+      <el-table-column align="center" label="STT" width="135">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -31,7 +31,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <h2>Thông tin khách hàng</h2>
+    <h2>Thông tin thanh toán</h2>
     <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="140px" label-position="left">
       <el-form-item label="Tên KH">
         <el-input v-model="customer.name" disabled />
@@ -39,14 +39,11 @@
       <el-form-item label="Số điện thoại" disabled>
         <el-input ref="phoneNumber" v-model="customer.phoneNumber" disabled />
       </el-form-item>
-      <el-form-item label="Giới tính">
-        <el-select v-model="customer.gender" disabled>
-          <el-option label="Nam" value="Nam" />
-          <el-option label="Nữ" value="Nữ" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="Ngày bắt đầu">
-        <el-input v-model="startDate" disabled />
+        <el-input v-model="formattedStartDate" disabled />
+      </el-form-item>
+      <el-form-item label="Ngày trả">
+        <el-input v-model="endDate" disabled />
       </el-form-item>
       <el-form-item label="Số ngày dự kiến">
         <el-input v-model="expectedRentDays" disabled />
@@ -113,6 +110,14 @@ export default {
       } else {
         return this.cost
       }
+    },
+    endDate() {
+      const end = new Date()
+      return end.toLocaleDateString()
+    },
+    formattedStartDate() {
+      const start = new Date(this.startDate)
+      return start.toLocaleDateString()
     }
   },
   created() {

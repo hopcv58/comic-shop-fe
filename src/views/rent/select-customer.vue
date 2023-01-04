@@ -12,7 +12,7 @@
       highlight-current-row
       style="margin-bottom: 50px"
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="STT" width="95">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -80,7 +80,7 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="STT" width="95">
         <template slot-scope="scope">
           {{ listProps.currentPage * customerSearchQuery.pageSize - customerSearchQuery.pageSize + scope.$index + 1 }}
         </template>

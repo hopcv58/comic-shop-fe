@@ -10,7 +10,7 @@
       :summary-method="getSummaries"
       show-summary
     >
-      <el-table-column align="center" label="ID" width="135">
+      <el-table-column align="center" label="STT" width="135">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -31,34 +31,31 @@
         </template>
       </el-table-column>
     </el-table>
-    <h2>Thông tin khách hàng</h2>
+    <h2>Thông tin thanh toán</h2>
     <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="140px" label-position="left">
       <el-form-item label="Tên KH">
         <el-input v-model="customer.name" disabled />
       </el-form-item>
       <el-form-item label="Số điện thoại" disabled>
-        <el-input ref="phoneNumber" v-model="customer.phoneNumber" disabled />
-      </el-form-item>
-      <el-form-item label="Giới tính">
-        <el-select v-model="customer.gender" disabled>
-          <el-option label="Nam" value="Nam" />
-          <el-option label="Nữ" value="Nữ" />
-        </el-select>
+        <el-input v-model="customer.phoneNumber" disabled />
       </el-form-item>
       <el-form-item label="Ngày bắt đầu">
-        <el-input v-model="startDate" disabled />
+        <el-input v-model="formattedStartDate" disabled />
+      </el-form-item>
+      <el-form-item label="Ngày trả">
+        <el-input v-model="formattedEndDate" disabled />
       </el-form-item>
       <el-form-item label="Số ngày đã thuê">
-        <el-input ref="phoneNumber" :value="rentDays" disabled />
+        <el-input :value="rentDays" disabled />
       </el-form-item>
       <el-form-item label="Phí thuê">
-        <el-input ref="phoneNumber" :value="cost" disabled />
+        <el-input :value="cost" disabled />
       </el-form-item>
       <el-form-item label="Phí phạt">
-        <el-input ref="phoneNumber" :value="fine" disabled />
+        <el-input :value="numberFormat(fine)" disabled />
       </el-form-item>
       <el-form-item label="Tổng tiền">
-        <el-input ref="phoneNumber" :value="totalPayment" disabled />
+        <el-input :value="numberFormat(totalPayment)" disabled />
       </el-form-item>
     </el-form>
   </div>
@@ -91,6 +88,14 @@ export default {
   computed: {
     cost() {
       return numberFormat(this.totalPayment - this.fine)
+    },
+    formattedEndDate() {
+      const end = new Date(this.endDate)
+      return end.toLocaleDateString()
+    },
+    formattedStartDate() {
+      const start = new Date(this.startDate)
+      return start.toLocaleDateString()
     }
   },
   created() {
@@ -104,6 +109,13 @@ export default {
         }, 500)
       }
     }, 500)
+  },
+
+  mounted() {
+    window.onafterprint = function(e) {
+      // redirect to home page
+      window.location.href = '/'
+    }
   },
   methods: {
     numberFormat,

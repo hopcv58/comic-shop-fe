@@ -32,7 +32,7 @@
       border
       :row-class-name="tableRowClassName"
     >
-      <el-table-column align="center" label="ID" width="85">
+      <el-table-column align="center" label="STT" width="85">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>

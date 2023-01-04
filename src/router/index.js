@@ -47,13 +47,7 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
+    redirect: '/comic/list'
   },
 
   {
@@ -162,7 +156,7 @@ export const constantRoutes = [
         path: 'list',
         name: 'OrderList',
         component: () => import('@/views/rent/index.vue'),
-        meta: { title: 'Danh sách phiếu thuê' }
+        meta: { title: 'Trả truyện' }
       },
       {
         path: 'detail/:id(\\d+)',

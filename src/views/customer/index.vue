@@ -19,7 +19,7 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="ID" width="95">
+      <el-table-column align="center" label="STT" width="95">
         <template slot-scope="scope">
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>

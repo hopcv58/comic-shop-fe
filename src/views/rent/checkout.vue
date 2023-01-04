@@ -10,7 +10,7 @@
       :summary-method="getSummaries"
       show-summary
     >
-      <el-table-column align="center" label="ID" width="135">
+      <el-table-column align="center" label="STT" width="135">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -25,13 +25,18 @@
           {{ scope.row.code }}
         </template>
       </el-table-column>
+      <el-table-column label="Tình trạng truyện">
+        <template slot-scope="scope">
+          {{ scope.row.status }}
+        </template>
+      </el-table-column>
       <el-table-column label="Giá cọc">
         <template slot-scope="scope">
           {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
     </el-table>
-    <h2>Thông tin khách hàng</h2>
+    <h2>Thông tin thanh toán</h2>
     <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="120px" label-position="left">
       <el-form-item label="Tên">
         <el-input v-model="customer.name" disabled />
@@ -39,15 +44,10 @@
       <el-form-item label="Số điện thoại" disabled>
         <el-input ref="phoneNumber" v-model="customer.phoneNumber" disabled />
       </el-form-item>
-      <el-form-item label="Giới tính">
-        <el-select v-model="customer.gender" disabled>
-          <el-option label="Nam" value="Nam" />
-          <el-option label="Nữ" value="Nữ" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="Số ngày thuê">
         <el-input ref="phoneNumber" v-model="rentDay" autofocus />
       </el-form-item>
+      <br>
       <el-button type="success" size="mini" @click="handleRent">In phiếu thuê</el-button>
     </el-form>
   </div>
@@ -103,7 +103,8 @@ export default {
                 id: comicDetail[j].id,
                 name: comic.name,
                 code: comicDetail[j].comicDetailCode,
-                price: comic.price
+                price: comic.price,
+                status: comicDetail[j].status
               })
             }
             this.listLoading = false
@@ -135,7 +136,7 @@ export default {
           sums[index] = 'Tổng tiền cọc'
           return
         }
-        if (index === 3) {
+        if (index === 4) {
           let sum = 0
           for (let i = 0; i < data.length; i++) {
             sum += data[i].price

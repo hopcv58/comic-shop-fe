@@ -17,7 +17,7 @@
       :row-class-name="tableRowClassName"
       @current-change="handleSelect"
     >
-      <el-table-column align="center" label="ID" width="55">
+      <el-table-column align="center" label="STT" width="55">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>

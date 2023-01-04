@@ -25,7 +25,7 @@
       row-class-name="clickable-row"
       @current-change="handleSelect"
     >
-      <el-table-column align="center" label="ID" width="55">
+      <el-table-column align="center" label="STT" width="55">
         <template slot-scope="scope">
           {{ listProps.currentPage * params.pageSize - params.pageSize + scope.$index + 1 }}
         </template>

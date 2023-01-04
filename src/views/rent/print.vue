@@ -10,7 +10,7 @@
       :summary-method="getSummaries"
       show-summary
     >
-      <el-table-column align="center" label="ID" width="135">
+      <el-table-column align="center" label="STT" width="135">
         <template slot-scope="scope">
           {{ scope.$index + 1 }}
         </template>
@@ -25,13 +25,18 @@
           {{ scope.row.code }}
         </template>
       </el-table-column>
+      <el-table-column label="Tình trạng truyện">
+        <template slot-scope="scope">
+          {{ scope.row.status }}
+        </template>
+      </el-table-column>
       <el-table-column label="Giá cọc">
         <template slot-scope="scope">
           {{ numberFormat(scope.row.price) }}
         </template>
       </el-table-column>
     </el-table>
-    <h2>Thông tin khách hàng</h2>
+    <h2>Thông tin thanh toán</h2>
     <el-form ref="form" class="form-search" :inline="true" :model="customer" label-width="140px" label-position="left">
       <el-form-item label="Tên KH">
         <el-input v-model="customer.name" disabled />
@@ -39,17 +44,11 @@
       <el-form-item label="Số điện thoại" disabled>
         <el-input ref="phoneNumber" v-model="customer.phoneNumber" disabled />
       </el-form-item>
-      <el-form-item label="Giới tính">
-        <el-select v-model="customer.gender" disabled>
-          <el-option label="Nam" value="Nam" />
-          <el-option label="Nữ" value="Nữ" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="Ngày bắt đầu">
-        <el-input v-model="startDate" disabled />
+        <el-input v-model="formattedStartDate" disabled />
       </el-form-item>
-      <el-form-item label="Số ngày dự kiến">
-        <el-input v-model="expectedRentDays" disabled />
+      <el-form-item label="Ngày trả dự kiến">
+        <el-input v-model="expectedEndDate" disabled />
       </el-form-item>
     </el-form>
   </div>
@@ -85,6 +84,15 @@ export default {
       const end = new Date()
       const diffTime = Math.abs(end - start)
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    },
+    expectedEndDate() {
+      const start = new Date(this.startDate)
+      const end = new Date(start.setDate(start.getDate() + this.expectedRentDays))
+      return end.toLocaleDateString()
+    },
+    formattedStartDate() {
+      const start = new Date(this.startDate)
+      return start.toLocaleDateString()
     }
   },
   created() {
@@ -98,6 +106,12 @@ export default {
         }, 500)
       }
     }, 500)
+  },
+  mounted() {
+    window.onafterprint = function(e) {
+      // redirect to home page
+      window.location.href = '/'
+    }
   },
   methods: {
     numberFormat,
@@ -121,7 +135,8 @@ export default {
                         id: res[j].id,
                         name: comic.name,
                         code: res[j].comicDetailCode,
-                        price: comic.price
+                        price: comic.price,
+                        status: res[j].status
                       })
                       break
                     }
@@ -141,7 +156,7 @@ export default {
           sums[index] = 'Tổng tiền cọc'
           return
         }
-        if (index === 3) {
+        if (index === 4) {
           let sum = 0
           for (let i = 0; i < data.length; i++) {
             sum += data[i].price
