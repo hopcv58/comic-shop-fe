@@ -9,7 +9,7 @@
         <el-input v-model="form.username" />
       </el-form-item>
       <el-form-item label="Vai trò">
-        <el-select v-model="form.role" placeholder="Bấm vào để chọn">
+        <el-select v-model="form.roles" placeholder="Bấm vào để chọn">
           <el-option label="Quản trị viên" value="admin" />
           <el-option label="Nhân viên" value="user" />
         </el-select>
@@ -33,7 +33,7 @@ export default {
       form: {
         email: '',
         username: '',
-        role: '',
+        roles: '',
         password: ''
       }
     }
@@ -45,9 +45,9 @@ export default {
     fetchData() {
       getById(this.$route.params.id).then(res => {
         if (res.role && res.role[0] === 'ROLE_ADMIN') {
-          res.role = 'admin'
+          res.roles = 'admin'
         } else {
-          res.role = 'user'
+          res.roles = 'user'
         }
         res.password = ''
         this.form = res
@@ -68,7 +68,7 @@ export default {
         this.$message.error('Tên đăng nhập phải có ít nhất 4 ký tự')
         return
       }
-      if (!this.form.role) {
+      if (!this.form.roles) {
         this.$message.error('Vui lòng chọn vai trò')
         return
       }
@@ -80,7 +80,13 @@ export default {
         this.$message.error('Mật khẩu phải có ít nhất 4 ký tự')
         return
       }
-      handleUpdate(this.$route.params.id, this.form).then(res => {
+      handleUpdate(this.$route.params.id, {
+        id: this.$route.params.id,
+        email: this.form.email,
+        username: this.form.username,
+        roles: this.form.roles === 'admin' ? ['ROLE_ADMIN'] : ['ROLE_USER'],
+        password: this.form.password
+      }).then(res => {
         this.$message.success('Cập nhật khách hàng thành công')
         this.$router.push({ name: 'CustomerList' })
       }).catch(err => {
