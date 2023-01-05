@@ -44,6 +44,12 @@ export default {
   methods: {
     fetchData() {
       getById(this.$route.params.id).then(res => {
+        if (res.role && res.role[0] === 'ROLE_ADMIN') {
+          res.role = 'admin'
+        } else {
+          res.role = 'user'
+        }
+        res.password = ''
         this.form = res
       }).catch(err => {
         console.log(err)

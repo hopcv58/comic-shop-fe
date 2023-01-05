@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { handleUpdatePassword } from '@/api/account'
 
 export default {
   data() {
@@ -34,7 +35,31 @@ export default {
   },
   methods: {
     onSubmit: function() {
-      console.log(this.form)
+      if (this.form.oldPassword === '') {
+        this.$message.error('Vui lòng nhập mật khẩu cũ')
+        return
+      }
+      if (this.form.newPassword === '') {
+        this.$message.error('Vui lòng nhập mật khẩu mới')
+        return
+      }
+      if (this.form.confirmPassword === '') {
+        this.$message.error('Vui lòng nhập lại mật khẩu mới')
+        return
+      }
+      if (this.form.newPassword !== this.form.confirmPassword) {
+        this.$message.error('Mật khẩu mới không khớp')
+        return
+      }
+      handleUpdatePassword({
+        oldPassword: this.form.oldPassword,
+        newPassword: this.form.newPassword
+      }).then(res => {
+        this.$message.success('Thay đổi mật khẩu thành công')
+        this.$router.push({ path: '/dashboard' })
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

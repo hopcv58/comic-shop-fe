@@ -33,6 +33,19 @@ import Print from '@/layout/print'
  */
 export const constantRoutes = [
   {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -248,13 +261,21 @@ export const asyncRoutes = [
         name: 'AccountEdit',
         component: () => import('@/views/account/edit'),
         meta: { title: 'Sửa thông tin', roles: ['ROLE_ADMIN'], activeMenu: '/account/list' },
-        hidden: true,
-      },
+        hidden: true
+      }
+    ]
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
       {
         path: 'change-password',
         name: 'PasswordChange',
         component: () => import('@/views/account/password-change'),
-        meta: { title: 'Thay đổi mật khẩu', roles: ['ROLE_ADMIN', 'ROLE_USER'] }
+        meta: { title: 'Thay đổi mật khẩu', roles: ['ROLE_ADMIN', 'ROLE_USER'], icon: 'el-icon-lock' }
       }
     ]
   },

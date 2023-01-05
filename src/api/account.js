@@ -36,3 +36,11 @@ export function handleDelete(id) {
     method: 'delete'
   })
 }
+
+export function handleUpdatePassword(data) {
+  return request({
+    url: '/users/change-password',
+    method: 'post',
+    data
+  })
+}

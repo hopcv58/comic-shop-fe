@@ -6,6 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    email: '',
     avatar: '',
     roles: []
   }
@@ -31,6 +32,10 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
     localStorage.setItem('roles', JSON.stringify(roles))
+  },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+    localStorage.setItem('email', email)
   }
 }
 
@@ -43,6 +48,7 @@ const actions = {
         commit('SET_TOKEN', response.accessToken)
         commit('SET_ROLES', response.roles)
         commit('SET_NAME', response.username)
+        commit('SET_EMAIL', response.email)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
         setToken(response.accessToken)
         resolve()
@@ -57,10 +63,12 @@ const actions = {
     const name = localStorage.getItem('name')
     const avatar = localStorage.getItem('avatar')
     const roles = JSON.parse(localStorage.getItem('roles'))
+    const email = localStorage.getItem('email')
     commit('SET_NAME', name)
     commit('SET_AVATAR', avatar)
     commit('SET_ROLES', roles)
-    return { name, avatar, roles }
+    commit('SET_EMAIL', email)
+    return { name, avatar, roles, email }
   },
 
   // user logout

@@ -39,7 +39,7 @@
           {{ isAdmin(scope.row) ? 'Quản trị viên' : 'Nhân viên' }}
         </template>
       </el-table-column>
-      <el-table-column label="" width="180" align="center">
+      <el-table-column label="" width="150" align="center">
         <template slot-scope="scope">
           <el-button
             type="primary"
