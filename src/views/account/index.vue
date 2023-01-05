@@ -94,7 +94,7 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('This will permanently delete the customer. Continue?', 'Warning', {
+      this.$confirm('This will permanently delete this account. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
@@ -105,6 +105,11 @@ export default {
             message: 'Delete successfully!'
           })
           this.fetchData()
+        }).catch((error) => {
+          this.$message({
+            type: 'error',
+            message: error.response.data.message || error.message
+          })
         })
       })
     }

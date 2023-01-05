@@ -52,8 +52,8 @@ export default {
         return
       }
       handleUpdatePassword({
-        oldPassword: this.form.oldPassword,
-        newPassword: this.form.newPassword
+        oldPass: this.form.oldPassword,
+        newPass: this.form.newPassword
       }).then(res => {
         this.$message.success('Thay đổi mật khẩu thành công')
         this.$router.push({ path: '/dashboard' })
