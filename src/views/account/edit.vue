@@ -6,7 +6,7 @@
         <el-input ref="phoneNumber" v-model="form.email" />
       </el-form-item>
       <el-form-item label="Tên đăng nhập">
-        <el-input v-model="form.username" />
+        <el-input :value="form.username" disabled />
       </el-form-item>
       <el-form-item label="Vai trò">
         <el-select v-model="form.roles" placeholder="Bấm vào để chọn">
@@ -44,7 +44,7 @@ export default {
   methods: {
     fetchData() {
       getById(this.$route.params.id).then(res => {
-        if (res.role && res.role[0] === 'ROLE_ADMIN') {
+        if (res.roles && res.roles[0] && res.roles[0].name === 'ROLE_ADMIN') {
           res.roles = 'admin'
         } else {
           res.roles = 'user'
@@ -82,10 +82,10 @@ export default {
       }
       handleUpdate(this.$route.params.id, {
         id: this.$route.params.id,
-        email: this.form.email,
         username: this.form.username,
-        roles: this.form.roles === 'admin' ? ['ROLE_ADMIN'] : ['ROLE_USER'],
-        password: this.form.password
+        email: this.form.email,
+        password: this.form.password,
+        roles: this.form.roles === 'admin' ? [{ id: 1, name: 'ROLE_ADMIN' }] : [{ id: 2, name: 'ROLE_USER' }]
       }).then(res => {
         this.$message.success('Cập nhật khách hàng thành công')
         this.$router.push({ name: 'CustomerList' })
