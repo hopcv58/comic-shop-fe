@@ -17,7 +17,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/account/change-password">
+          <router-link to="/change-password">
             <el-dropdown-item>
               Đổi mật khẩu
             </el-dropdown-item>
