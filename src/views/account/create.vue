@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Mật khẩu">
-        <el-input v-model="form.password" />
+        <el-input v-model="form.password" type="password" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">Lưu lại</el-button>
@@ -33,7 +33,7 @@ export default {
       form: {
         email: '',
         username: '',
-        role: '',
+        role: 'user',
         password: ''
       }
     }

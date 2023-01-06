@@ -15,7 +15,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="Mật khẩu">
-        <el-input v-model="form.password" type="password"/>
+        <el-input v-model="form.password" type="password" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">Lưu lại</el-button>
