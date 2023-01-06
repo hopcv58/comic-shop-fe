@@ -52,7 +52,7 @@
         @click="createCustomerDialogueVisible = true"
       >Tạo KH</el-button>
     </el-form>
-    <el-dialog title="Shipping address" :visible.sync="createCustomerDialogueVisible">
+    <el-dialog title="Tạo khách hàng mới" :visible.sync="createCustomerDialogueVisible">
       <el-form :model="createCustomerForm">
         <el-form-item label="Tên" label-width="120px">
           <el-input v-model="createCustomerForm.name" autocomplete="off" />

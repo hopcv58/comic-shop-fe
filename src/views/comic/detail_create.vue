@@ -70,10 +70,10 @@ export default {
         this.$message.error('Vui lòng nhập tên thể loại')
         return
       }
-      if (!this.form.position) {
-        this.$message.error('Vui lòng nhập vị trí')
-        return
-      }
+      // if (!this.form.position) {
+      //   this.$message.error('Vui lòng nhập vị trí')
+      //   return
+      // }
       if (!this.form.price) {
         this.$message.error('Vui lòng nhập giá tiền')
         return
